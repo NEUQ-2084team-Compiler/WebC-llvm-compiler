@@ -5,6 +5,8 @@
 #ifndef SYSYPLUS_COMPILER_KSQL_H
 #define SYSYPLUS_COMPILER_KSQL_H
 
+
+
 extern "C" {
 /**
  * 连接到MySQL
@@ -16,6 +18,7 @@ extern "C" {
  * @param charset 字符集
  * @return
  */
+
 int _ksql_connect_db(const char *hostname, const char *username, const char *password, const char *schema, int port,const char *charset);
 /**
  * 释放内存
@@ -33,6 +36,24 @@ const char *_ksql_query_db(const char *sqlSentence);
  * @return
  */
 int _ksql_isMysqlConnected();
+/**
+ * 添加数据
+ * @param sqlSentence select语句
+ * @return
+ */
+int _ksql_insert_db(const char *sqlSentence);
+/**
+ * 修改数据
+ * @param sqlSentence update语句
+ * @return
+ */
+int _ksql_update_db(const char *sqlSentence);
+/**
+ * 删除数据
+ * @param sqlSentence delete语句
+ * @return
+ */
+int _ksql_delete_db(const char *sqlSentence);
 }
 
 #endif //SYSYPLUS_COMPILER_KSQL_H
