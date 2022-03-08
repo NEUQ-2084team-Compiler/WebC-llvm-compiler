@@ -20,7 +20,7 @@ std::unique_ptr<NodeAST> LogError(const char *Str) {
 }
 
 std::unique_ptr<NodeAST> LogInfo(const char *Str) {
-    fprintf(stdout, "Info: %s\n", Str);
+    fprintf(stdout, "INFO: %s\n", Str);
 #ifdef CGUI
     logOnUi(Str);
 #endif

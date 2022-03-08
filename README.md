@@ -1,6 +1,6 @@
 # WebC-llvm-compiler
 
-使用LLVM框架的SysyPlus语言编译器
+使用LLVM框架的WebC语言编译器
 ---
 
 仓库地址：[Github Repo](https://github.com/Kingtous/Sysy2020-llvm-compiler)
@@ -13,11 +13,11 @@ LLVM框架语言：LLVM 12.0.0
 
 界面依赖：gtkmm3
 
-编译环境：cmake 3.13 + Deepin 20.1 Beta
+编译环境：cmake 3.16 + Ubuntu20.04 Beta
 > 编译时若出错请注意LLVM版本号
 
 #### 背景
-SysyPlus编译器偏向于生成网络方面的执行代码，让小白开发者也可以做一个简单、易用、高性能、安全的http服务器。后期根据开发进度开发其他功能。
+WebC编译器偏向于生成网络方面的执行代码，让小白开发者也可以做一个简单、易用、高性能、安全的http服务器。后期根据开发进度开发其他功能。
 
 众所周知：c的http晦涩难学，导包过于繁琐。但性能最好，python的http简单，但是是解释型语言，源码直接暴露，java的http也有学习成本，
 且针对简单的http服务使用java这种复杂通用性语言有剩余空间，杀鸡焉用牛刀。
@@ -85,7 +85,7 @@ SysyPlus编译器致力于打造一个简单语法的http服务器，上手即�
 - 生成对应系统架构的目标代码
 - ...(比较懒，不想写)
 
-#### 一段SySyPlus源文件
+#### 一段WebC源文件
 
 - 无需导包
 
@@ -115,7 +115,7 @@ int main(){
 - 编译输出
   - 可直接运行
 ```shell
-➜  Desktop g++ 2.sy.o libtime.a libweb.a -o test
+➜  Desktop g++ test.o libtime.a libweb.a -o test
 ➜  Desktop ./test
 init web framework 123 345
 socket id is 0
@@ -273,141 +273,13 @@ _main:
 	leaq	-59(%rbp), %rdi
 	xorl	%eax, %eax
 	callq	_printf
-	callq	__web_getSocket
-	movl	%eax, %r14d
-	movl	%eax, -80(%rbp)
-	movabsq	$2850364258808613, %rax
-	movq	%rax, -88(%rbp)
-	leaq	L__str_43(%rip), %rsi
-	leaq	-88(%rbp), %rdi
-	movl	%r14d, %edx
-	xorl	%eax, %eax
-	callq	_printf
-	leaq	L__str_44(%rip), %r15
-	movq	%r15, -104(%rbp)
-	leaq	L__str_45(%rip), %rbx
-	movq	%rbx, -96(%rbp)
-	movq	%r12, -73(%rbp)
-	movl	$544417056, -65(%rbp)
-	movw	$10, -61(%rbp)
-	leaq	L__str_46(%rip), %rsi
-	leaq	L__str_47(%rip), %rcx
-	leaq	-73(%rbp), %rdi
-	movq	%r15, %rdx
-	movq	%rbx, %r8
-	xorl	%eax, %eax
-	callq	_printf
-	movl	%r14d, %edi
-	movq	%r15, %rsi
-	movq	%rbx, %rdx
-	callq	__web_connectSocket
-	movl	%eax, -44(%rbp)
-	movl	%r14d, %edi
-	callq	__web_isSocketConnected
-	movl	%eax, -44(%rbp)
-	testl	%eax, %eax
-	jne	LBB0_2
-	movq	%rsp, %rax
-	leaq	-16(%rax), %rdi
-	movq	%rdi, %rsp
-	movb	$0, -12(%rax)
-	movl	$169898789, -16(%rax)
-	leaq	L__str_48(%rip), %rsi
-	xorl	%eax, %eax
-	callq	_printf
-	movq	%rsp, %rax
-	leaq	-16(%rax), %rdi
-	movq	%rdi, %rsp
-	movb	$0, -12(%rax)
-	movl	$169898789, -16(%rax)
-	leaq	L__str_49(%rip), %rsi
-	xorl	%eax, %eax
-	callq	_printf
-	movq	%rsp, %rbx
-	leaq	-16(%rbx), %rsp
-	leaq	L__str_44(%rip), %rsi
-	leaq	L__str_50(%rip), %rdx
-	movl	%r14d, %edi
-	callq	__web_callGetRequest
-	movq	%rax, %r15
-	movq	%rax, -16(%rbx)
-	movq	%rsp, %rax
-	leaq	-16(%rax), %rdi
-	movq	%rdi, %rsp
-	movb	$0, -12(%rax)
-	movl	$169898789, -16(%rax)
-	leaq	L__str_51(%rip), %rsi
-	xorl	%eax, %eax
-	callq	_printf
-	movq	%rsp, %rax
-	leaq	-16(%rax), %rdi
-	movq	%rdi, %rsp
-	movb	$0, -12(%rax)
-	movl	$169898789, -16(%rax)
-	movq	%r15, %rsi
-	xorl	%eax, %eax
-	callq	_printf
-LBB0_2:
-	movl	%r14d, %edi
-	callq	__web_closeSocket
-	movl	$0, -48(%rbp)
-	xorl	%eax, %eax
-	leaq	-32(%rbp), %rsp
-	popq	%rbx
-	popq	%r12
-	popq	%r14
-	popq	%r15
-	popq	%rbp
-	retq
-	.cfi_endproc
-
-	.section	__TEXT,__cstring,cstring_literals
-L__str_39:
-	.asciz	"\347\235\241\347\234\2401s..."
-
-L__str_40:
-	.asciz	"init web framework"
-
-L__str_41:
-	.asciz	"123"
-
-L__str_42:
-	.asciz	"345"
-
-L__str_43:
-	.asciz	"socket id is"
-
-L__str_44:
-	.asciz	"file.kingtous.cn"
-
-L__str_45:
-	.asciz	"443"
-
-L__str_46:
-	.asciz	"url is:"
-
-L__str_47:
-	.asciz	" port is:"
-
-L__str_48:
-	.asciz	"socket connected"
-
-L__str_49:
-	.asciz	"sending get request"
-
-L__str_50:
-	.asciz	"/"
-
-L__str_51:
-	.asciz	"response is:"
-
-.subsections_via_symbols
+    ......
 
 ```
 
 ### TODO list
 
-- ~~支持编译器内的函数指针~~
-- ~~支持HTTPS TLS v1.2加密，基于openssl~~
-- json数据的创建、修改
-- 支持连接mysql，执行sql语句返回json
+- [x] 支持编译器内的函数指针
+- [x] 支持HTTPS TLS v1.2加密，基于openssl
+- [x] json数据的创建、修改
+- [x] 支持连接mysql，执行sql语句返回json

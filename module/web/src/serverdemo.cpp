@@ -17,7 +17,7 @@ void startServer() {
 
 
 int main() {
-    _ksql_connect_db("39.107.226.2", "weather", "jintao123", "weather",3306,"utf8");
+//    _ksql_connect_db("39.107.226.2", "weather", "jintao123", "weather",3306,"utf8");
 //    _ksql_connect_db(HOST, USER, PASSWD, DATABASE);
     startServer();
     // for test interface

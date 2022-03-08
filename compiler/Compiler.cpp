@@ -10,6 +10,7 @@
 #include "parser/NetworkReader.h"
 
 #ifdef CLANG_SUPPORT
+
 #include <llvm/Support/Program.h>
 #include <llvm/Support/VirtualFileSystem.h>
 #include <clang/Frontend/TextDiagnosticPrinter.h>
@@ -23,7 +24,7 @@ using namespace clang;
 
 Lexer *m_lexer;
 
-const vector <string> *getOpenSSLLibDir();
+const vector<string> *getOpenSSLLibDir();
 
 void initExternFunc() {
     // 初始化外层函数
@@ -38,7 +39,7 @@ void initExternFunc() {
 int startAnalyze(ArgsParser *parser) {
     // 初始化外层函数
     initExternFunc();
-    for (const auto &uri : parser->getFiles()) {
+    for (const auto &uri: parser->getFiles()) {
         outs() << "正在分析 " << uri << "...\n";
         boost::cmatch url_parsed;
         IFileReader *file_reader;
@@ -63,7 +64,7 @@ int startAnalyze(ArgsParser *parser) {
                 return RERR;
             } else {
                 long t2 = __getms();
-                printf("\n语法分析耗时：%ld", t2 - t1);
+                printf("语法分析耗时：%ld\n", t2 - t1);
                 return ROK;
             }
         } else {
@@ -175,8 +176,7 @@ int genCode(const set<ArgsParser::Options> &opts, const char *outputPath) {
         LogError(dest.error().message().c_str());
     }
 
-    LogInfo("已生成目标文件");
-    LogInfo(omit_file_name.c_str());
+    LogInfo(("已生成目标文件 " + omit_file_name).c_str());
 #ifdef CLANG_SUPPORT
     // 不需要生成可执行文件
     if (opts.find(ArgsParser::Options::OUTPUT_EXECUTABLE) == opts.end()) {
@@ -191,7 +191,6 @@ int genCode(const set<ArgsParser::Options> &opts, const char *outputPath) {
     }
     LogInfo(clang->c_str());
     vector<const char *> args;
-    // TODO 支持多文件
     args.push_back(clang->c_str());
     args.push_back(omit_file_name.c_str());
 #if WIN32
@@ -209,10 +208,10 @@ int genCode(const set<ArgsParser::Options> &opts, const char *outputPath) {
     // 链接openssl
     auto openssl_libs = getOpenSSLLibDir();
     if (openssl_libs == nullptr) {
-        LogError("openssl库没找到，无法编译");
+        LogError("openssl库未找到，无法编译");
         return RERR;
     }
-    for (const auto &item : *openssl_libs) {
+    for (const auto &item: *openssl_libs) {
         args.push_back(item.c_str());
     }
 #ifdef WIN32
@@ -238,9 +237,8 @@ int genCode(const set<ArgsParser::Options> &opts, const char *outputPath) {
         return RERR;
     }
     long t2 = __getms();
-    LogInfo("编译完成");
-    LogInfo(to_string(t2 - t1).c_str());
-    LogInfo(outputPath);
+    LogInfo(("编译完成, 共花费" + to_string(t2 - t1) + "ms").c_str());
+    LogInfo((string(outputPath) + " 已生成").c_str());
 #endif
     return ROK;
 }
@@ -287,7 +285,8 @@ int build(std::string *buf, const char *outputPath, const std::set<ArgsParser::O
 }
 
 #ifdef CLANG_SUPPORT
-const vector <string> *getOpenSSLLibDir() {
+
+const vector<string> *getOpenSSLLibDir() {
     vector<const char *> argv;
     auto pkgconfig = sys::findProgramByName("pkg-config");
     if (auto ec = pkgconfig.getError()) {

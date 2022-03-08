@@ -3,7 +3,7 @@ project(KingtousProject)
 message(STATUS "configuring KingtousProject-Web模块")
 set(CMAKE_BUILD_TYPE Release)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/obj/unknown)
 set(LOCATION "lib")

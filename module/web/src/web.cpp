@@ -94,7 +94,7 @@ public:
         socket_.async_handshake(boost::asio::ssl::stream_base::server,
                                 [this](boost::system::error_code ec) {
                                     if (ec) {
-                                        fprintf(stderr, "%s\n", ec.message().c_str());
+                                        fprintf(stderr, "ERROR: %s\n", ec.message().c_str());
                                         close();
                                     } else {
                                         handle_handshake(ec);
@@ -373,6 +373,7 @@ void _web_HttpWorker::accept() {
             asio::make_strand(*io_context),
             [this](beast::error_code ec, tcp::socket socket) {
                 if (ec) {
+                    printf("Wrong3");
                     std::fprintf(stderr, "%s\n", ec.message().c_str());
                 } else {
                     // 创建

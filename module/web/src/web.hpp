@@ -12,11 +12,14 @@
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
+
 #ifdef _WIN32
 #include <direct.h>
-    #define getcwd _getcwd // stupid MSFT "deprecation" warning
+#define getcwd _getcwd // stupid MSFT "deprecation" warning
 #else
+
 #include <unistd.h>
+
 #endif
 //#include <>
 
