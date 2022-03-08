@@ -16,7 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
+
+    - name: Update
+      run: sudo apt update
+
     - name: Installing LLVM 12
       run: sudo apt remove -y llvm-11* libclang-11* clang-11* && sudo apt install -y llvm-12-dev libclang-12-dev clang-12
 
