@@ -3,8 +3,6 @@
 使用LLVM框架的WebC语言编译器
 ---
 
-仓库地址：[Github Repo](https://github.com/Kingtous/Sysy2020-llvm-compiler)
-
 当前编译状态：![build status](https://github.com/NEUQ-2084team-Compiler/WebC-llvm-compiler/actions/workflows/cmake.yml/badge.svg)
 
 LLVM框架语言：LLVM 12.0.0
@@ -13,7 +11,7 @@ LLVM框架语言：LLVM 12.0.0
 
 界面依赖：gtkmm3
 
-编译环境：cmake 3.16 + Ubuntu20.04 Beta
+编译环境：cmake 3.16 + Ubuntu20.04
 > 编译时若出错请注意LLVM版本号
 
 #### 背景

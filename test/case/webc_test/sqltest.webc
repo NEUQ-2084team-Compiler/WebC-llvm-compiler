@@ -1,6 +1,8 @@
 int main(){
-    connect_db('127.0.0.1', 'root', '123456', 'school',3306,'utf8');
-    str ans = query_db('select * from category');
+    mysql_connect_db('127.0.0.1', 'root', '123456', 'school',3306,'utf8');
+    mysql_exec_db('INSERT INTO category(categoryid,pid,categoryname) VALUES(9,2,`ewfwe`)');
+    str ans = mysql_query_db('select * from category');
     echo('category database is',ans);
+    mysql_free_memory();
     ret 0;
 }

@@ -10,7 +10,7 @@ Value *
 EchoFunctionHandler::tryhandle(LLVMContext &context, Module &module, std::string callName, std::vector<Value *> *argV) {
     if (callName == "echo" && argV != NIL) {
         std::string format_str;
-        for (auto v : *argV) {
+        for (auto v: *argV) {
             if (v->getType()->isIntegerTy()) {
                 switch (dyn_cast<IntegerType>(v->getType())->getBitWidth()) {
                     case 32 :
@@ -334,6 +334,18 @@ Function *ExternFunctionHandler::getOrAddIsMysqlConnected(LLVMContext &context, 
     return func;
 }
 
+Function *ExternFunctionHandler::getOrAddExecDB(LLVMContext &context, Module &module) {
+    Function *func = module.getFunction("_ksql_exec_db");
+    if (func != NIL) {
+        return func;
+    }
+    FunctionType *ty = FunctionType::get(Type::getInt32Ty(context),
+                                         {Type::getInt8Ty(context)->getPointerTo()},
+                                         false);
+    func = Function::Create(ty, llvm::GlobalValue::ExternalLinkage, "_ksql_exec_db", module);
+    return func;
+}
+
 Value *
 WebFunctionHandler::tryhandle(LLVMContext &context, Module &module, std::string callName, std::vector<Value *> *argV) {
     // 处理 {@link module/web/web.h}，注意名字要保持一致
@@ -425,18 +437,21 @@ Value *KStringFunctionHandler::tryhandle(LLVMContext &context, Module &module, s
 
 Value *KsqlFunctionHandler::tryhandle(LLVMContext &context, Module &module, std::string callName,
                                       std::vector<Value *> *argV) {
-    if (callName == "connect_db" && !argV->empty()) {
+    if (callName == "mysql_connect_db" && !argV->empty()) {
         auto func = ExternFunctionHandler::getOrAddConnectDB(context, module);
         return Builder->CreateCall(func, *argV);
-    } else if (callName == "free_memory" && argV->empty()) {
+    } else if (callName == "mysql_free_memory" && argV->empty()) {
         auto func = ExternFunctionHandler::getOrAddFreeMemory(context, module);
         return Builder->CreateCall(func);
-    } else if (callName == "query_db" && !argV->empty()) {
+    } else if (callName == "mysql_query_db" && !argV->empty()) {
         auto func = ExternFunctionHandler::getOrAddQueryDB(context, module);
         return Builder->CreateCall(func, *argV);
-    } else if (callName == "isMysqlConnected" && argV->empty()) {
+    } else if (callName == "mysql_is_connected" && argV->empty()) {
         auto func = ExternFunctionHandler::getOrAddIsMysqlConnected(context, module);
         return Builder->CreateCall(func);
+    } else if (callName == "mysql_exec_db" && !argV->empty()) {
+        auto func = ExternFunctionHandler::getOrAddExecDB(context, module);
+        return Builder->CreateCall(func,*argV);
     } else {
         return nullptr;
     }

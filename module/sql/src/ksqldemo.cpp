@@ -7,9 +7,10 @@
 
 
 int main() {
-    _ksql_connect_db("39.107.226.2", "weather", "jintao123", "weather", 3306, "utf8");
-//    auto a = strToJson(_ksql_query_db("select * from subject"));
-//    cout<<jsonToStr(a);
+    _ksql_connect_db("127.0.0.1", "root", "123456", "school", 3306, "utf8");
+    _ksql_exec_db("INSERT INTO category(categoryid,pid,categoryname) VALUES(9,2,'电子信息')");
+    auto a = _ksql_query_db("select * from category");
+    std::cout << a;
 
     // std::cout << _ksql_query_db("select * from weather");
     // std::cout << _ksql_insert_db("insert into `weather` (`area`,`temp`) values('哈','30')");

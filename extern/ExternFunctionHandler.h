@@ -73,6 +73,8 @@ public:
     static Function *getOrAddQueryDB(LLVMContext &context, Module &module);
 
     static Function *getOrAddIsMysqlConnected(LLVMContext &context, Module &module);
+
+    static Function *getOrAddExecDB(LLVMContext &context, Module &module);
 };
 
 
