@@ -1,11 +1,5 @@
-//
-// Created by 金韬 on 2021/3/20.
-//
-
 #ifndef SYSYPLUS_COMPILER_KSQL_H
 #define SYSYPLUS_COMPILER_KSQL_H
-
-
 
 extern "C" {
 /**
@@ -18,8 +12,8 @@ extern "C" {
  * @param charset 字符集
  * @return
  */
-
-int _ksql_connect_db(const char *hostname, const char *username, const char *password, const char *schema, int port,const char *charset);
+int _ksql_connect_db(const char *hostname, const char *username, const char *password, const char *schema, int port,
+                     const char *charset);
 /**
  * 释放内存
  * @return
@@ -42,18 +36,24 @@ int _ksql_isMysqlConnected();
  * @return
  */
 int _ksql_exec_db(const char *sqlSentence);
-///**
-// * 修改数据
-// * @param sqlSentence update语句
-// * @return
-// */
-//int _ksql_update_db(const char *sqlSentence);
-///**
-// * 删除数据
-// * @param sqlSentence delete语句
-// * @return
-// */
-//int _ksql_delete_db(const char *sqlSentence);
+/**
+ * 连接到SQLite3
+ * @param path
+ * @return
+ */
+int _ksqlite_connect_db(const char *path);
+/**
+ * 执行SQLite3语句
+ * @param sentence
+ * @return
+ */
+int _ksqlite_exec_db(const char *sentence);
+/**
+ * 执行SQLite3语句(不返回数据)
+ * @param sentence
+ * @return
+ */
+const char *_ksqlite_query_db(const char *sentence);
 }
 
 #endif //SYSYPLUS_COMPILER_KSQL_H

@@ -1,8 +1,13 @@
 int main(){
-    mysql_connect_db('127.0.0.1', 'root', '123456', 'school',3306,'utf8');
-    mysql_exec_db('INSERT INTO category(categoryid,pid,categoryname) VALUES(9,2,`ewfwe`)');
-    str ans = mysql_query_db('select * from category');
-    echo('category database is',ans);
-    mysql_free_memory();
+    //mysql_connect_db('127.0.0.1', 'root', '123456', 'school',3306,'utf8');
+    //mysql_exec_db('INSERT INTO category(categoryid,pid,categoryname) VALUES(9,2,`ewfwe`)');
+    //str ans = mysql_query_db('select * from category');
+    //echo('category database is',ans);
+    //mysql_free_memory();
+
+    sqlite_connect_db('../test.db');
+    //sqlite_exec_db();
+    str res = sqlite_query_db('select * from person;');
+    echo(res);
     ret 0;
 }

@@ -199,6 +199,7 @@ int genCode(const set<ArgsParser::Options> &opts, const char *outputPath) {
 #endif
     args.push_back("-lksql");
     args.push_back("-lmysqlcppconn");
+    args.push_back("-lsqlite3");
     args.push_back("-lkweb");
     args.push_back("-lktime");
     args.push_back("-lkjson");
