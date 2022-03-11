@@ -7,7 +7,7 @@
 
 #include <algorithm>
 
-#include "Global.h"
+#include "compiler/Global.h"
 #include "ast/NodeAST.hpp"
 #include "ExternFunctionHandler.h"
 

@@ -11,7 +11,7 @@
 #include <queue>
 #include <typeinfo>
 
-#include "Global.h"
+#include "compiler/Global.h"
 #include "extern/ExternFunctionLinker.h"
 
 using namespace std;

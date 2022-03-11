@@ -1,7 +1,7 @@
 #include <iostream>
 #include "args_parser.h"
 #include "parser/Parser.hpp"
-#include "Global.h"
+#include "compiler/Global.h"
 #include "ui/widgets.h"
 #include "compiler/Compiler.h"
 

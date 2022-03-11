@@ -5,7 +5,7 @@
 #ifndef SYSYPLUS_COMPILER_RECURSIVETOLOOPPASS_H
 #define SYSYPLUS_COMPILER_RECURSIVETOLOOPPASS_H
 
-#include "Global.h"
+#include "compiler/Global.h"
 
 using namespace llvm;
 

@@ -10,7 +10,7 @@
 #include <cctype>
 #include <utility>
 
-#include "../Global.h"
+#include "compiler/Global.h"
 #include "IFileReader.h"
 #include "FileReader.h"
 #include "Parser.hpp"

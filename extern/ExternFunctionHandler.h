@@ -7,7 +7,7 @@
 
 #include <cmath>
 
-#include "Global.h"
+#include "compiler/Global.h"
 
 #define INTERNAL_IMPL 10
 #define USER_IMPL 100

@@ -4,7 +4,7 @@
 
 #include "Lexer.h"
 
-#include "stat.h"
+#include "compiler/stat.h"
 
 int Lexer::_getNextToken() {
     while (isspace(last_char)) {

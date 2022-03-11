@@ -2,7 +2,7 @@
 // Created by kingtous on 2021/2/12.
 //
 
-#include <ErrHelper.h>
+#include "compiler/ErrHelper.h"
 #include <gtksourceviewmm.h>
 #include "widgets.h"
 

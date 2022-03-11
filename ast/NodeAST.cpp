@@ -6,9 +6,9 @@
 
 #include <utility>
 #include <iostream>
-#include "ErrHelper.h"
+#include "compiler/ErrHelper.h"
 #include "codegen/CodeGen.h"
-#include "stat.h"
+#include "compiler/stat.h"
 
 long StringExprAST::id = 0;
 

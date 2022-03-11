@@ -4,7 +4,7 @@
 
 #include "TimeAnalysisPass.h"
 
-#include "ErrHelper.h"
+#include "compiler/ErrHelper.h"
 
 char TimeAnalysisPass::ID = 0;
 

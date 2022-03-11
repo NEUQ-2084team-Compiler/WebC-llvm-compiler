@@ -771,8 +771,8 @@ Help::Help( bool throwExceptionOnPrint )
 	,	m_printer( new HelpPrinter )
 	,	m_throwExceptionOnPrint( throwExceptionOnPrint )
 {
-	setDescription( SL( "Print this help." ) );
-	setLongDescription( SL( "Print this help." ) );
+	setDescription( SL( "打印帮助手册" ) );
+	setLongDescription( SL( "打印帮助手册" ) );
 }
 
 } /* namespace Args */

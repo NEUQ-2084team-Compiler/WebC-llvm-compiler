@@ -1,12 +1,12 @@
 //
 // Created by 金韬 on 2020/9/23.
 //
-#include "../ErrHelper.h"
+#include "compiler/ErrHelper.h"
 #include "FileReader.h"
 #include <fstream>
 #include <sstream>
 
-#include "stat.h"
+#include "compiler/stat.h"
 
 FileReader::FileReader(const std::string &path) {
     std::ifstream ifs(path);

@@ -5,7 +5,7 @@
 #ifndef SYSYPLUS_COMPILER_STRINGREADER_H
 #define SYSYPLUS_COMPILER_STRINGREADER_H
 
-#include "Global.h"
+#include "compiler/Global.h"
 #include "IFileReader.h"
 
 /**

@@ -3,8 +3,8 @@
 //
 
 #include "NetworkReader.h"
-#include "Global.h"
-#include "ErrHelper.h"
+#include "compiler/Global.h"
+#include "compiler/ErrHelper.h"
 
 #include <utility>
 #include <boost/asio/post.hpp>

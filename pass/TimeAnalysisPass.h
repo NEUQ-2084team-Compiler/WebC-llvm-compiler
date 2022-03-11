@@ -5,7 +5,7 @@
 #ifndef SYSYPLUS_COMPILER_TIMEANALYSISPASS_H
 #define SYSYPLUS_COMPILER_TIMEANALYSISPASS_H
 
-#include "Global.h"
+#include "compiler/Global.h"
 
 #include "extern/ExternFunctionHandler.h"
 

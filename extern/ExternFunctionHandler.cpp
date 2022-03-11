@@ -4,7 +4,7 @@
 
 #include "ExternFunctionHandler.h"
 
-#include "ErrHelper.h"
+#include "compiler/ErrHelper.h"
 
 Value *
 EchoFunctionHandler::tryhandle(LLVMContext &context, Module &module, std::string callName, std::vector<Value *> *argV) {
