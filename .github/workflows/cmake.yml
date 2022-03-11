@@ -66,7 +66,7 @@ jobs:
 
     - name: Install
       shell: bash
-      run: cmake --build ${{github.workspace}}/build --target install
+      run: sudo cmake --build ${{github.workspace}}/build --target install
 
     - name: Test
       working-directory: ${{github.workspace}}
