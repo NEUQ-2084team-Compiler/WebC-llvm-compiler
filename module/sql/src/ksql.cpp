@@ -1,11 +1,7 @@
-//
-// Created by 金韬 on 2021/3/20.
-//
-
 #include "ksql.h"
 
 #include <mutex>
-
+#include <sqlite3.h>
 #include "mysql_driver.h"
 #include "mysql_connection.h"
 #include "cppconn/statement.h"
@@ -36,6 +32,10 @@ typedef SQLData WEBC_SQL_DATA;
 sql::mysql::MySQL_Driver *driver;
 sql::Connection *conn;
 WEBC_SQL_DATA webcSqlData;
+
+// sqlite value
+sqlite3 *lite_sql = nullptr;
+sqlite3_stmt *lite_stmt = nullptr;
 
 std::mutex mysql_mutex;
 
@@ -233,6 +233,62 @@ int _ksql_free_memory() {
 
 int _ksql_isMysqlConnected() {
     return conn->isClosed() ? NOT_CONNECT : SUCCESS;
+}
+
+// sqlite
+int _ksqlite_connect_db(const char *path) {
+    int result = sqlite3_open(path, &lite_sql);
+    if (result == SQLITE_OK) {
+        return SUCCESS;
+    } else {
+        return FFAILED;
+    }
+}
+
+int _ksqlite_exec_db(const char *sentence) {
+    int result = sqlite3_prepare(lite_sql, sentence, -1, &lite_stmt, nullptr);
+    if (result == SQLITE_OK) {
+        sqlite3_step(lite_stmt);
+    } else {
+        return FFAILED;
+    }
+    sqlite3_finalize(lite_stmt);
+    return SUCCESS;
+}
+
+const char *_ksqlite_query_db(const char *sentence) {
+    std::string res;
+    char **pResult;
+    int nRow;
+    int nCol;
+    int result = sqlite3_get_table(lite_sql, sentence, &pResult, &nRow, &nCol, nullptr);
+    if (result == SQLITE_OK) {
+        res += "{";
+        res += "\"result\":";
+        res += "[";
+        int nIndex = nCol;
+        for (int i = 0; i < nRow; i++) {
+            res += "{";
+            for (int j = 0; j < nCol; j++) {
+                res += "\"";
+                res += pResult[j];
+                res += "\"";
+                res += ":";
+                res += "\"";
+                res += pResult[nIndex];
+                res += "\"";
+                if (j < nCol - 1) res += ",";
+                nIndex++;
+            }
+            res += "}";
+            if (i < nRow - 1) res += ",";
+        }
+        res += "]}";
+    }
+    sqlite3_free_table(pResult);
+    auto cstrdata = new string(res);
+
+    return cstrdata->c_str();
 }
 
 

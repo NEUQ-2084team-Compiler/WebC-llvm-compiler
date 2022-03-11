@@ -280,7 +280,7 @@ Function *ExternFunctionHandler::getOrAddtoString(LLVMContext &context, Module &
     return func;
 }
 
-Function *ExternFunctionHandler::getOrAddConnectDB(LLVMContext &context, Module &module) {
+Function *ExternFunctionHandler::getOrAddMysqlConnectDB(LLVMContext &context, Module &module) {
     Function *func = module.getFunction("_ksql_connect_db");
     if (func != NIL) {
         return func;
@@ -302,7 +302,7 @@ Function *ExternFunctionHandler::getOrAddConnectDB(LLVMContext &context, Module 
     return func;
 }
 
-Function *ExternFunctionHandler::getOrAddFreeMemory(LLVMContext &context, Module &module) {
+Function *ExternFunctionHandler::getOrAddMysqlFreeMemory(LLVMContext &context, Module &module) {
     Function *func = module.getFunction("_ksql_free_memory");
     if (func != NIL) {
         return func;
@@ -312,7 +312,7 @@ Function *ExternFunctionHandler::getOrAddFreeMemory(LLVMContext &context, Module
     return func;
 }
 
-Function *ExternFunctionHandler::getOrAddQueryDB(LLVMContext &context, Module &module) {
+Function *ExternFunctionHandler::getOrAddMysqlQueryDB(LLVMContext &context, Module &module) {
     Function *func = module.getFunction("_ksql_query_db");
     if (func != NIL) {
         return func;
@@ -334,7 +334,7 @@ Function *ExternFunctionHandler::getOrAddIsMysqlConnected(LLVMContext &context, 
     return func;
 }
 
-Function *ExternFunctionHandler::getOrAddExecDB(LLVMContext &context, Module &module) {
+Function *ExternFunctionHandler::getOrAddMysqlExecDB(LLVMContext &context, Module &module) {
     Function *func = module.getFunction("_ksql_exec_db");
     if (func != NIL) {
         return func;
@@ -343,6 +343,42 @@ Function *ExternFunctionHandler::getOrAddExecDB(LLVMContext &context, Module &mo
                                          {Type::getInt8Ty(context)->getPointerTo()},
                                          false);
     func = Function::Create(ty, llvm::GlobalValue::ExternalLinkage, "_ksql_exec_db", module);
+    return func;
+}
+
+Function *ExternFunctionHandler::getOrAddSQLiteConnectDB(LLVMContext &context, Module &module) {
+    Function *func = module.getFunction("_ksqlite_connect_db");
+    if (func != NIL) {
+        return func;
+    }
+    FunctionType *ty = FunctionType::get(Type::getInt32Ty(context),
+                                         {Type::getInt8Ty(context)->getPointerTo()},
+                                         false);
+    func = Function::Create(ty, llvm::GlobalValue::ExternalLinkage, "_ksqlite_connect_db", module);
+    return func;
+}
+
+Function *ExternFunctionHandler::getOrAddSQLiteExecDB(LLVMContext &context, Module &module) {
+    Function *func = module.getFunction("_ksqlite_exec_db");
+    if (func != NIL) {
+        return func;
+    }
+    FunctionType *ty = FunctionType::get(Type::getInt32Ty(context),
+                                         {Type::getInt8Ty(context)->getPointerTo()},
+                                         false);
+    func = Function::Create(ty, llvm::GlobalValue::ExternalLinkage, "_ksqlite_exec_db", module);
+    return func;
+}
+
+Function *ExternFunctionHandler::getOrAddSQLiteQueryDB(LLVMContext &context, Module &module) {
+    Function *func = module.getFunction("_ksqlite_query_db");
+    if (func != NIL) {
+        return func;
+    }
+    FunctionType *ty = FunctionType::get(Type::getInt8Ty(context)->getPointerTo(),
+                                         {Type::getInt8Ty(context)->getPointerTo()},
+                                         false);
+    func = Function::Create(ty, llvm::GlobalValue::ExternalLinkage, "_ksqlite_query_db", module);
     return func;
 }
 
@@ -438,20 +474,29 @@ Value *KStringFunctionHandler::tryhandle(LLVMContext &context, Module &module, s
 Value *KsqlFunctionHandler::tryhandle(LLVMContext &context, Module &module, std::string callName,
                                       std::vector<Value *> *argV) {
     if (callName == "mysql_connect_db" && !argV->empty()) {
-        auto func = ExternFunctionHandler::getOrAddConnectDB(context, module);
+        auto func = ExternFunctionHandler::getOrAddMysqlConnectDB(context, module);
         return Builder->CreateCall(func, *argV);
     } else if (callName == "mysql_free_memory" && argV->empty()) {
-        auto func = ExternFunctionHandler::getOrAddFreeMemory(context, module);
+        auto func = ExternFunctionHandler::getOrAddMysqlFreeMemory(context, module);
         return Builder->CreateCall(func);
     } else if (callName == "mysql_query_db" && !argV->empty()) {
-        auto func = ExternFunctionHandler::getOrAddQueryDB(context, module);
+        auto func = ExternFunctionHandler::getOrAddMysqlQueryDB(context, module);
         return Builder->CreateCall(func, *argV);
     } else if (callName == "mysql_is_connected" && argV->empty()) {
         auto func = ExternFunctionHandler::getOrAddIsMysqlConnected(context, module);
         return Builder->CreateCall(func);
     } else if (callName == "mysql_exec_db" && !argV->empty()) {
-        auto func = ExternFunctionHandler::getOrAddExecDB(context, module);
-        return Builder->CreateCall(func,*argV);
+        auto func = ExternFunctionHandler::getOrAddMysqlExecDB(context, module);
+        return Builder->CreateCall(func, *argV);
+    } else if (callName == "sqlite_connect_db" && !argV->empty()) {
+        auto func = ExternFunctionHandler::getOrAddSQLiteConnectDB(context, module);
+        return Builder->CreateCall(func, *argV);
+    } else if (callName == "sqlite_exec_db" && !argV->empty()) {
+        auto func = ExternFunctionHandler::getOrAddSQLiteExecDB(context, module);
+        return Builder->CreateCall(func, *argV);
+    } else if (callName == "sqlite_query_db" && !argV->empty()) {
+        auto func = ExternFunctionHandler::getOrAddSQLiteQueryDB(context, module);
+        return Builder->CreateCall(func, *argV);
     } else {
         return nullptr;
     }

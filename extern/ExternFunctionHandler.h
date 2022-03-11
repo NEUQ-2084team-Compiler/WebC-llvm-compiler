@@ -66,15 +66,23 @@ public:
 
     static Function *getOrAddtoString(LLVMContext &context, Module &module);
 
-    static Function *getOrAddConnectDB(LLVMContext &context, Module &module);
+    // mysql
+    static Function *getOrAddMysqlConnectDB(LLVMContext &context, Module &module);
 
-    static Function *getOrAddFreeMemory(LLVMContext &context, Module &module);
+    static Function *getOrAddMysqlFreeMemory(LLVMContext &context, Module &module);
 
-    static Function *getOrAddQueryDB(LLVMContext &context, Module &module);
+    static Function *getOrAddMysqlQueryDB(LLVMContext &context, Module &module);
 
     static Function *getOrAddIsMysqlConnected(LLVMContext &context, Module &module);
 
-    static Function *getOrAddExecDB(LLVMContext &context, Module &module);
+    static Function *getOrAddMysqlExecDB(LLVMContext &context, Module &module);
+
+    // sqlite
+    static Function *getOrAddSQLiteConnectDB(LLVMContext &context,Module &module);
+
+    static Function *getOrAddSQLiteExecDB(LLVMContext &context,Module &module);
+
+    static Function *getOrAddSQLiteQueryDB(LLVMContext &context,Module &module);
 };
 
 

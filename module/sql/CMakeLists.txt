@@ -5,8 +5,6 @@ set(CMAKE_CXX_STANDARD 14)
 message(STATUS ${CMAKE_SOURCE_DIR})
 set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/obj/unknown)
 set(LOCATION "lib")
-include_directories()
-link_directories()
 
 if (APPLE)
     message(STATUS "macOS detected")
@@ -28,13 +26,21 @@ message(STATUS "ksql files: ${SRC}")
 
 add_library(ksql STATIC src/ksql.cpp)
 
-add_executable(ksqldemo src/ksqldemo.cpp)
-
-target_link_libraries(ksqldemo kjson ksql mysqlcppconn)
+if (UNIX)
+    # 目前sqlite只在linux上启用
+    find_package(SQLite3 REQUIRED)
+    if (SQLITE3_FOUND)
+        target_include_directories(ksql PUBLIC ${SQLite3_INCLUDE_DIRS})
+        target_link_libraries(ksql PUBLIC ${SQLite3_LIBRARIES})
+    endif (SQLITE3_FOUND)
+endif ()
 
 if (WIN32)
     target_link_libraries(ksqldemo ws2_32 secur32 mysqlclient)
 endif ()
+
+add_executable(ksqldemo src/ksqldemo.cpp)
+target_link_libraries(ksqldemo kjson ksql mysqlcppconn)
 
 install(TARGETS ksql
         ARCHIVE DESTINATION ${LOCATION}
