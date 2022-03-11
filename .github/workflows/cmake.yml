@@ -72,7 +72,7 @@ jobs:
       working-directory: ${{github.workspace}}
       run: |
         build/webc_compiler -i test/case/webc_test/qsort.webc -o a.out
-        test/case/webc_test/a.out
+        a.out
 
 #    - name: Create Release
 #      id: create_release
