@@ -1,47 +1,119 @@
 # WebC-llvm-compiler
 
-使用LLVM框架的WebC语言编译器
----
+![build status](https://github.com/NEUQ-2084team-Compiler/WebC-llvm-compiler/actions/workflows/cmake.yml/badge.svg)
 
-当前编译状态：![build status](https://github.com/NEUQ-2084team-Compiler/WebC-llvm-compiler/actions/workflows/cmake.yml/badge.svg)
+**WebC**编译器偏向于生成网络方面的执行代码，让小白开发者也可以做一个简单、易用、高性能、安全的http服务器。后期根据开发进度开发其他功能。
 
-LLVM框架语言：LLVM 12.0.0
+众所周知：C的http晦涩难学，安装第三方库过于繁琐,但性能最好;Python的http简单，但是是解释型语言，源码直接暴露;Java的http也有学习成本，
+且针对简单的http服务使用Java这种复杂通用性语言有剩余空间，杀鸡焉用牛刀。
 
-工具库依赖：libBoost、LLVM、glib
+WebC编译器致力于打造一个简单语法的http服务器，上手即用语法简单，不用导任何包，不用管依赖问题， 生成的产物为编译好的可执行文件，文件小，安全，且能利用Python不能使用的多核cpu线程优势。
 
-界面依赖：gtkmm3
+### 环境配置
+* Debian系列系统运行项目目录下install.sh即可
+* 其他操作系统需参照install.sh安装对应环境
+  (环境安装过程中如遇无法自行解决的问题,请积极提issue😂)
 
-编译环境：cmake 3.16 + Ubuntu20.04
-> 编译时若出错请注意LLVM版本号
+### 一些简单的例子
+helloserver.webc
+~~~
+str hello() {
+    ret 'hello from compiler';
+}
 
-#### 背景
-WebC编译器偏向于生成网络方面的执行代码，让小白开发者也可以做一个简单、易用、高性能、安全的http服务器。后期根据开发进度开发其他功能。
+int main() {
+    echo('init...');
+    str host = '0.0.0.0';
+    int port = 9000;
+    int core = 2;
+    echo('get server...');
+    int server_id = getServer(host, port, core);
+    echo('server id is', server_id);
+    addUrlHandler(server_id, 'GET', '/hello', 'text/html', hello);
+    echo('start server in host', host, ',port is', port);
+    startServer(server_id);
+    ret 0;
+}
+~~~
+sqltest.webc
+~~~
+int main(){
+    sqlite_connect_db('test.db');
+    str res = sqlite_query_db('select * from person;');
+    echo(res);
+    ret 0;
+}
+~~~
+qsort.webc
+~~~
+int qsort(int a[],int left,int right){
+    if (right <= left){
+        ret -1;
+    }
+    int base = a[left];
+    int j = left;
+    int k = right;
+    echo('begin wh');
+    wh(j<k){
+        wh(a[k]>=base && j<k){
+            k = k - 1;
+        }
+        a[j] = a[k];
+        wh(a[j]<=base && j<k){
+            j = j + 1;
+        }
+        a[k] = a[j];
+        echo('j,k,a[j],a[k]',j,k,a[j],a[k]);
+    }
+    a[k] = base;
+    qsort(a,left,k);
+    qsort(a,left,k- 1);
+    ret 0;
+}
 
-众所周知：c的http晦涩难学，导包过于繁琐。但性能最好，python的http简单，但是是解释型语言，源码直接暴露，java的http也有学习成本，
-且针对简单的http服务使用java这种复杂通用性语言有剩余空间，杀鸡焉用牛刀。
+int main(){
+    int b[5]= {4,7,1,2,3};
+    echo('original:',b[0],b[1],b[2],b[3],b[4]);
+    int max = 4;
+    echo('start qsort');
+    qsort(b,0,max);
+    echo('output qsort result');
+    echo('now:',b[0],b[1],b[2],b[3],b[4]);
+}
+~~~
+sleeptest.webc
+~~~
+void sleep_1(){
+    sleep(1);
+}
+void sleep_2(){
+    sleep(2);
+}
+void sleep_3(){
+    sleep(3);
+}
 
-SysyPlus编译器致力于打造一个简单语法的http服务器，上手即用语法简单，不用导任何包，不用管依赖问题，
-生成的产物为编译好的可执行文件，文件小，安全，且能利用python不能使用的多核cpu线程优势。
+int main(){
+    sleep_1();
+    sleep_2();
+    sleep_3();
+}
+~~~
+### 编译选项
 
-#### 效果图
+* -i, --input <arg>   输入源文件
 
-以用程序自带访问一次HTTP为例
+* -o, --output <arg>  输出目标文件
 
-![](/imgs/ide.png)
+* -s, --as            生成可读汇编文件
 
-- IDE GUI可直接进行代码静态分析（变量不存在，函数重复定义等）
-- IDE GUI拥有丰富的代码提示功能
-- 编译或执行SysyPlus代码
-- 当然你也可以当一个文本编辑器
+* -h, --help <arg>    打印帮助手册
 
-#### 编译选项
+* -j, --object        只生成目标文件
 
-- CGUI
-  - 开启图形界面编译，生成带GUI的编译器
-- DEBUG_FLAG
-  - 开启词法、语法的调试模式
+* -t, --time_analysis 在函数内加入时间分析
 
-#### 目前支持程度
+### 目前支持程度
 
 - 函数定义
   - 参数
@@ -78,202 +150,10 @@ SysyPlus编译器致力于打造一个简单语法的http服务器，上手即�
   - 支持TLSv1.3加密HTTPS（需要openssl支持，现默认使用TLSv1.2，兼容性好）
 - 代码插桩/优化功能
   - 函数执行时间分析
-  - 递归函数转非递归（正在开发中）
+  - 递归函数转非递归
 - 生成AST语法树
 - 生成对应系统架构的目标代码
-- ...(比较懒，不想写)
 
-#### 一段WebC源文件
-
-- 无需导包
-
-```c
-int main(){
-    sleep(1);
-    echo('init web framework', '123', '345');
-    int socketId = getSocket();
-    echo('socket id is',socketId);
-    str url = 'file.kingtous.cn';
-    str port = '443';
-    echo('url is:',url,' port is:',port);
-    int state = connectSocket(socketId,url,port);
-    state = isSocketConnected(socketId);
-    if (state == 0){
-        echo('socket connected');
-        echo('sending get request');
-        str response = getRequest(socketId,url,'/');
-        echo('response is:');
-        echo(response);
-    }
-    closeSocket(socketId);
-    ret 0;
-}
-```
-
-- 编译输出
-  - 可直接运行
-```shell
-➜  Desktop g++ test.o libtime.a libweb.a -o test
-➜  Desktop ./test
-init web framework 123 345
-socket id is 0
-url is: file.kingtous.cn  port is: 443
-socket connected
-sending get request
-response is:
-<html>
-<head><title>302 Found</title></head>
-<body>
-<center><h1>302 Found</h1></center>
-<hr><center>nginx</center>
-</body>
-</html>
-
-➜  Desktop
-```
-  - 可选择生成LLVM IR语法
-```lldb
- ModuleID = 'cn.kingtous.sysycompiler'
-source_filename = "cn.kingtous.sysycompiler"
-target datalayout = "e-m:o-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
-target triple = "x86_64-apple-darwin19.6.0"
-
-@_str_49 = private unnamed_addr constant [19 x i8] c"init web framework\00", align 1
-@_str_50 = private unnamed_addr constant [4 x i8] c"123\00", align 1
-@_str_51 = private unnamed_addr constant [4 x i8] c"345\00", align 1
-@_str_52 = private unnamed_addr constant [13 x i8] c"socket id is\00", align 1
-@_str_53 = private unnamed_addr constant [17 x i8] c"file.kingtous.cn\00", align 1
-@_str_54 = private unnamed_addr constant [4 x i8] c"443\00", align 1
-@_str_55 = private unnamed_addr constant [8 x i8] c"url is:\00", align 1
-@_str_56 = private unnamed_addr constant [10 x i8] c" port is:\00", align 1
-@_str_57 = private unnamed_addr constant [17 x i8] c"socket connected\00", align 1
-@_str_58 = private unnamed_addr constant [20 x i8] c"sending get request\00", align 1
-@_str_59 = private unnamed_addr constant [2 x i8] c"/\00", align 1
-@_str_60 = private unnamed_addr constant [13 x i8] c"response is:\00", align 1
-
-define i32 @main() {
-jintao_entry:
-  %0 = alloca i32, align 4
-  store i32 0, i32* %0, align 4
-  %1 = tail call i32 @sleep(i32 1)
-  %2 = alloca [11 x i8], align 1
-  store [11 x i8] c"%s %s %s \0A\00", [11 x i8]* %2, align 1
-  %3 = bitcast [11 x i8]* %2 to i8*
-  %echo = call i32 (i8*, ...) @printf(i8* %3, i8* getelementptr inbounds ([19 x i8], [19 x i8]* @_str_49, i32 0, i32 0), i8* getelementptr inbounds ([4 x i8], [4 x i8]* @_str_50, i32 0, i32 0), i8* getelementptr inbounds ([4 x i8], [4 x i8]* @_str_51, i32 0, i32 0))
-  %4 = alloca i32, align 4
-  %5 = call i32 @_web_getSocket()
-  store i32 %5, i32* %4, align 4
-  %6 = alloca [8 x i8], align 1
-  store [8 x i8] c"%s %d \0A\00", [8 x i8]* %6, align 1
-  %7 = bitcast [8 x i8]* %6 to i8*
-  %echo1 = call i32 (i8*, ...) @printf(i8* %7, i8* getelementptr inbounds ([13 x i8], [13 x i8]* @_str_52, i32 0, i32 0), i32 %5)
-  %8 = alloca i8*, align 8
-  store i8* getelementptr inbounds ([17 x i8], [17 x i8]* @_str_53, i32 0, i32 0), i8** %8, align 8
-  %9 = alloca i8*, align 8
-  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @_str_54, i32 0, i32 0), i8** %9, align 8
-  %10 = alloca [14 x i8], align 1
-  store [14 x i8] c"%s %s %s %s \0A\00", [14 x i8]* %10, align 1
-  %11 = bitcast [14 x i8]* %10 to i8*
-  %echo2 = call i32 (i8*, ...) @printf(i8* %11, i8* getelementptr inbounds ([8 x i8], [8 x i8]* @_str_55, i32 0, i32 0), i8* getelementptr inbounds ([17 x i8], [17 x i8]* @_str_53, i32 0, i32 0), i8* getelementptr inbounds ([10 x i8], [10 x i8]* @_str_56, i32 0, i32 0), i8* getelementptr inbounds ([4 x i8], [4 x i8]* @_str_54, i32 0, i32 0))
-  %12 = alloca i32, align 4
-  %13 = call i32 @_web_connectSocket(i32 %5, i8* getelementptr inbounds ([17 x i8], [17 x i8]* @_str_53, i32 0, i32 0), i8* getelementptr inbounds ([4 x i8], [4 x i8]* @_str_54, i32 0, i32 0))
-  store i32 %13, i32* %12, align 4
-  %14 = call i32 @_web_isSocketConnected(i32 %5)
-  store i32 %14, i32* %12, align 4
-  %equ = icmp eq i32 %14, 0
-  br i1 %equ, label %neuq_jintao_if_true, label %neuq_jintao_if_end
-
-neuq_jintao_if_true:                              ; preds = %jintao_entry
-  %15 = alloca [5 x i8], align 1
-  store [5 x i8] c"%s \0A\00", [5 x i8]* %15, align 1
-  %16 = bitcast [5 x i8]* %15 to i8*
-  %echo4 = call i32 (i8*, ...) @printf(i8* %16, i8* getelementptr inbounds ([17 x i8], [17 x i8]* @_str_57, i32 0, i32 0))
-  %17 = alloca [5 x i8], align 1
-  store [5 x i8] c"%s \0A\00", [5 x i8]* %17, align 1
-  %18 = bitcast [5 x i8]* %17 to i8*
-  %echo5 = call i32 (i8*, ...) @printf(i8* %18, i8* getelementptr inbounds ([20 x i8], [20 x i8]* @_str_58, i32 0, i32 0))
-  %19 = alloca i8*, align 8
-  %20 = call i8* @_web_callGetRequest(i32 %5, i8* getelementptr inbounds ([17 x i8], [17 x i8]* @_str_53, i32 0, i32 0), i8* getelementptr inbounds ([2 x i8], [2 x i8]* @_str_59, i32 0, i32 0))
-  store i8* %20, i8** %19, align 8
-  %21 = alloca [5 x i8], align 1
-  store [5 x i8] c"%s \0A\00", [5 x i8]* %21, align 1
-  %22 = bitcast [5 x i8]* %21 to i8*
-  %echo6 = call i32 (i8*, ...) @printf(i8* %22, i8* getelementptr inbounds ([13 x i8], [13 x i8]* @_str_60, i32 0, i32 0))
-  %23 = alloca [5 x i8], align 1
-  store [5 x i8] c"%s \0A\00", [5 x i8]* %23, align 1
-  %24 = bitcast [5 x i8]* %23 to i8*
-  %echo7 = call i32 (i8*, ...) @printf(i8* %24, i8* %20)
-  br label %neuq_jintao_if_end
-
-neuq_jintao_if_end:                               ; preds = %neuq_jintao_if_true, %jintao_entry
-  %25 = call i32 @_web_closeSocket(i32 %5)
-  store i32 0, i32* %0, align 4
-  ret i32 0
-}
-
-declare i32 @sleep(i32)
-
-declare i32 @printf(i8*, ...)
-
-declare i32 @_web_getSocket()
-
-declare i32 @_web_connectSocket(i32, i8*, i8*)
-
-declare i32 @_web_isSocketConnected(i32)
-
-declare i8* @_web_callGetRequest(i32, i8*, i8*)
-
-declare i32 @_web_closeSocket(i32)
-
-; Function Attrs: nounwind
-declare void @llvm.stackprotector(i8*, i8**) #0
-
-attributes #0 = { nounwind }
-```
-  - 可选择生成可读汇编代码
-```asm
-	.section	__TEXT,__text,regular,pure_instructions
-	.build_version macos, 10, 15
-	.globl	_main
-	.p2align	4, 0x90
-_main:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset %rbp, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register %rbp
-	pushq	%r15
-	pushq	%r14
-	pushq	%r12
-	pushq	%rbx
-	subq	$80, %rsp
-	.cfi_offset %rbx, -48
-	.cfi_offset %r12, -40
-	.cfi_offset %r14, -32
-	.cfi_offset %r15, -24
-	movl	$0, -48(%rbp)
-	movl	$169898789, -37(%rbp)
-	movb	$0, -33(%rbp)
-	leaq	L__str_39(%rip), %rsi
-	leaq	-37(%rbp), %rdi
-	xorl	%eax, %eax
-	callq	_printf
-	movl	$1, %edi
-	callq	_sleep
-	movabsq	$8297073567416218405, %r12
-	movq	%r12, -59(%rbp)
-	movw	$2592, -51(%rbp)
-	movb	$0, -49(%rbp)
-	leaq	L__str_40(%rip), %rsi
-	leaq	L__str_41(%rip), %rdx
-	leaq	L__str_42(%rip), %rcx
-	leaq	-59(%rbp), %rdi
-	xorl	%eax, %eax
-	callq	_printf
-    ......
-
-```
 
 ### TODO list
 
@@ -281,3 +161,4 @@ _main:
 - [x] 支持HTTPS TLS v1.2加密，基于openssl
 - [x] json数据的创建、修改
 - [x] 支持连接mysql，执行sql语句返回json
+- [x] 支持连接SQLite3

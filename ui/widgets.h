@@ -21,7 +21,7 @@
 
 #include "compiler/Compiler.h"
 
-#define WINDOW_NAME "SySyCompiler By Kingtous"
+#define WINDOW_NAME "WebC Compiler"
 #define BUILD_PAGE_ID 0
 #define RUNTIME_PAGE_ID 1
 #define STATIC_ANALYSIS_PAGE_ID 2
