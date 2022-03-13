@@ -20,8 +20,8 @@ jobs:
     - name: APT Update
       run: sudo apt update
 
-    - name: Installing LLVM 12
-      run: sudo apt install -y llvm-12-dev libclang-12-dev clang-12
+    - name: Installing LLVM 11
+      run: sudo apt install -y llvm-11-dev libclang-11-dev clang-11
 
     - name: Installing build-essential
       run: sudo apt install -y build-essential

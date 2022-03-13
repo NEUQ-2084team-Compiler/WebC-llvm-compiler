@@ -8,7 +8,7 @@ sudo apt upgrade
 
 # install environments
 sudo apt install -y gcc g++ gdb cmake
-sudo apt install -y llvm-12-dev libclang-12-dev clang-12
+sudo apt install -y llvm-11-dev libclang-11-dev clang-11
 sudo apt install -y build-essential
 sudo apt install -y libedit-dev
 sudo apt install -y libboost-dev libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-thread-dev libboost-regex-dev
