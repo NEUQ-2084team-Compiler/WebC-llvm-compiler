@@ -212,8 +212,8 @@ private:
     std::shared_ptr<ssl_stream> ssl_stream_;
     boost::optional<http::request_parser<http::string_body>> parser;
     beast::flat_static_buffer<8192> buffer;
-    boost::asio::basic_waitable_timer<std::chrono::steady_clock> request_deadline{
-            acceptor.get_executor(), (std::chrono::steady_clock::time_point::max) ()};
+//    boost::asio::basic_waitable_timer<std::chrono::steady_clock> request_deadline{
+//            acceptor.get_executor(), (std::chrono::steady_clock::time_point::max) ()};
 
     void process_request(http::request<request_body_t> const &request);
 };

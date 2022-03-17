@@ -369,8 +369,11 @@ void _web_HttpWorker::process_request(http::request<request_body_t> const &reque
 }
 
 void _web_HttpWorker::accept() {
+//    acceptor.asy
     acceptor.async_accept(
-            asio::make_strand(*io_context),
+//            asio::make_strand(*io_context),
+//            asio::io_context::strand(*io_context),
+            *io_context,
             [this](beast::error_code ec, tcp::socket socket) {
                 if (ec) {
                     printf("Wrong3");
@@ -438,7 +441,8 @@ void _web_HttpWorker::sendNotExistResponse() {
 }
 
 void _web_HttpWorker::doClose() {
-    beast::get_lowest_layer(ssl_stream_)->shutdown();
+    beast::get_lowest_layer<std::shared_ptr<ssl_stream>>(ssl_stream_)->shutdown();
+//    beast::get_lowest_layer(ssl_stream_)->shutdown();
     ssl_stream_->async_shutdown([](beast::error_code ec) {
         // ignore
         if (ec) {
