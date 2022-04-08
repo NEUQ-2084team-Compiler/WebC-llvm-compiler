@@ -8,7 +8,9 @@
         int long str ret lp wh const nil if el echo()
         getSocket() connectSocket(socketId,'url','port') closeSocket(socketId)
         isSocketConnected(socketId) getRequest(socketId,'url','path') postRequest
-        addUrlHandler startServer getServer
+        addUrlHandler startServer getServer mysql_connect_db mysql_free_memory
+        mysql_query_db mysql_is_connected mysql_exec_db sqlite_connect_db
+        sqlite_exec_db sqlite_query_db
     </property>
   </object>
   <object class="GtkFileFilter" id="file-filer"/>
@@ -229,7 +231,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="margin_left">4</property>
-                <property name="label" translatable="yes">欢迎来到SysyCompiler By Kingtous.</property>
+                <property name="label" translatable="yes">欢迎来到WebC Compiler</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -472,16 +474,12 @@
   <object class="GtkAboutDialog" id="main_about">
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
-    <property name="program_name">SysyPlus Compiler</property>
-    <property name="version">V1.0</property>
-    <property name="copyright" translatable="yes">Kingtous</property>
-    <property name="comments" translatable="yes">2021毕业设计-金韬-计科1702班 东北大学秦皇岛分校</property>
-    <property name="website">https://kingtous.cn</property>
-    <property name="website_label" translatable="yes">我的网站</property>
-    <property name="authors">Kingtous</property>
-    <property name="translator_credits" translatable="yes">吕艳霞、王翠荣</property>
-    <property name="logo_icon_name">accessories-text-editor</property>
-    <property name="license_type">gpl-3-0</property>
+    <property name="program_name">WebC Compiler</property>
+    <property name="version">V2.0</property>
+    <property name="comments" translatable="yes">Hello Web!</property>
+    <property name="comments" translatable="yes">作者：原毅哲 王梓铭 邵凌寒</property>
+    <property name="logo_icon_name">computer</property>
+    <property name="translator_credits" translatable="yes">指导教师：吕艳霞</property>
     <child>
       <placeholder/>
     </child>

@@ -222,7 +222,8 @@ void CompilerWindow::initMenuBar() {
                             const vector<string> exe_argv = {exe_name};
                             int rpid, rinputId, routputId, rerrId;
                             Glib::spawn_async_with_pipes("", exe_argv, SPAWN_DEFAULT, SlotSpawnChildSetup(),
-                                                         reinterpret_cast<Pid *>(&rpid), &rinputId, &routputId, &rerrId);
+                                                         reinterpret_cast<Pid *>(&rpid), &rinputId, &routputId,
+                                                         &rerrId);
                             // 在窗口的线程池执行
                             window->setStatus(M_STATUS::IN_RUNNING);
                             boost::asio::post(window->threads, [=]() {
@@ -265,7 +266,7 @@ void CompilerWindow::initMenuBar() {
 CompilerWindow::CompilerWindow(BaseObjectType *cobject,
                                const Glib::RefPtr<Gtk::Builder> &builder)
         : Gtk::ApplicationWindow(cobject) {
-    g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", TRUE, NULL);
+    g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", FALSE, NULL);
     builder->get_widget("main_code_window", m_main_code_window);
     // 关于
     builder->get_widget("main_about", m_main_about);
@@ -289,6 +290,10 @@ CompilerWindow::CompilerWindow(BaseObjectType *cobject,
     builder->get_widget("main_control_expander", m_main_control_expander);
     builder->get_widget("main_code_pos_label", m_main_code_pos_label);
     builder->get_widget("menu_build_compile_asm", m_menu_build_compile_asm);
+    // 禁止以下三个textview的输入
+    m_main_runtime_console->set_editable(false);
+    m_main_static_analysis_console->set_editable(false);
+    m_main_build_console->set_editable(false);
     m_tip_buffer = RefPtr<TextBuffer>::cast_dynamic(builder->get_object("code_suggestion_buffer"));
 }
 
@@ -352,16 +357,18 @@ void CompilerWindow::initCodeForm() {
     m_gsv->get_source_buffer()->set_highlight_syntax(true);
     m_style_scheme_manager = Gsv::StyleSchemeManager::get_default();
     // style
-    auto scheme = m_style_scheme_manager->get_scheme("oblivion");
+    auto scheme = m_style_scheme_manager->get_scheme("solarized-light");
     m_gsv->get_source_buffer()->set_style_scheme(scheme);
     // TODO 增加字体可修改
     try {
-        auto style_context = get_style_context();
-        auto provider = Gtk::CssProvider::create();
-        provider->load_from_path("../ui/css/main.css");
+        GtkCssProvider *provider = nullptr;
+        GError *error = nullptr;
+        GtkSourceView *view = GTK_SOURCE_VIEW(gtk_source_view_new());
+        gtk_css_provider_load_from_path(provider, "../ui/css/main.css", &error);
+        GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET(view));
         auto display = Gdk::Display::get_default();
         auto screen = display->get_default_screen();
-        style_context->add_provider(provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
     catch (CssProviderError &e) {
         LogErrorV(e.what().c_str());
@@ -374,28 +381,28 @@ void CompilerWindow::initCodeForm() {
         m_is_dirty = true;
         m_last_edit_time = pt::microsec_clock::local_time();
     });
-        m_gsv->get_source_buffer()->property_cursor_position().signal_changed().connect(
-        [&]() {
-        auto buffer = m_gsv->get_source_buffer();
-        auto v = buffer->property_cursor_position().get_value();
-        auto iter = buffer->get_iter_at_offset(v);
-        string msg = to_string(iter.get_line() + 1) + "行" + to_string(iter.get_line_index()) + "列";
-        m_main_code_pos_label->set_text(msg);
-        });
+    m_gsv->get_source_buffer()->property_cursor_position().signal_changed().connect(
+            [&]() {
+                auto buffer = m_gsv->get_source_buffer();
+                auto v = buffer->property_cursor_position().get_value();
+                auto iter = buffer->get_iter_at_offset(v);
+                string msg = to_string(iter.get_line() + 1) + "行" + to_string(iter.get_line_index()) + "列";
+                m_main_code_pos_label->set_text(msg);
+            });
 
-        // 静态分析检查线程
-        auto current_state = m_state;
-        boost::asio::post(threads,[&, current_state]() {
+    // 静态分析检查线程
+    auto current_state = m_state;
+    boost::asio::post(threads, [&, current_state]() {
         while (1) {
-        boost::this_thread::sleep_for(boost::chrono::milliseconds(1000));
-        if (m_is_dirty) {
-        // 输入完成后，1s再分析
-        auto current_time = pt::microsec_clock::local_time();
-        auto delta_time = current_time - m_last_edit_time;
-        if (delta_time.total_milliseconds() > 1000 && current_state == M_STATUS::IN_EDIT) {
-        signal_idle().connect_once([&]() {
-        m_main_build_notebook->set_current_page(STATIC_ANALYSIS_PAGE_ID);
-        });
+            boost::this_thread::sleep_for(boost::chrono::milliseconds(1000));
+            if (m_is_dirty) {
+                // 输入完成后，1s再分析
+                auto current_time = pt::microsec_clock::local_time();
+                auto delta_time = current_time - m_last_edit_time;
+                if (delta_time.total_milliseconds() > 1000 && current_state == M_STATUS::IN_EDIT) {
+                    signal_idle().connect_once([&]() {
+                        m_main_build_notebook->set_current_page(STATIC_ANALYSIS_PAGE_ID);
+                    });
                     analysis(new string(m_gsv->get_source_buffer()->begin(), m_gsv->get_source_buffer()->end()));
                     log("分析完成\n");
                     m_is_dirty = false;

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -e
 # This script is only available for the debian series
 
 # update
