@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(webc_compiler)
+project(weblang_compiler)
 if (WIN32)
     set(CMAKE_CXX_STANDARD 14)
 else ()
@@ -99,7 +99,7 @@ message(STATUS "编译器：${COMPILER}")
 aux_source_directory(ui UI)
 message(STATUS "窗口实现：${UI}")
 
-add_executable(webc_compiler
+add_executable(weblang_compiler
         ${ROOT}
         ${AST}
         ${PARSER}
@@ -112,30 +112,30 @@ add_executable(webc_compiler
         ${COMPILER}
         )
 # 平台公用宏定义
-add_compile_definitions(webc_compiler PUBLIC ASM_SUFFIX=".s")
+add_compile_definitions(weblang_compiler PUBLIC ASM_SUFFIX=".s")
 # CGUI存在则生成可视化界面 DEBUG_FLAG开启调试模式 CLANG_SUPPORT开启可执行文件输出
-add_compile_definitions(webc_compiler PUBLIC CLANG_SUPPORT=1)
+add_compile_definitions(weblang_compiler PUBLIC CLANG_SUPPORT=1 CGUI=1)
 
 if (WIN32)
-    add_compile_definitions(webc_compiler PUBLIC EXECUTABLE_SUFFIX=".exe" OBJ_SUFFIX=".obj")
+    add_compile_definitions(weblang_compiler PUBLIC EXECUTABLE_SUFFIX=".exe" OBJ_SUFFIX=".obj")
 else ()
-    add_compile_definitions(webc_compiler PUBLIC EXECUTABLE_SUFFIX=".out" OBJ_SUFFIX=".o")
+    add_compile_definitions(weblang_compiler PUBLIC EXECUTABLE_SUFFIX=".out" OBJ_SUFFIX=".o")
 endif ()
 
 message(STATUS "host system is ${CMAKE_HOST_SYSTEM_PROCESSOR}")
 
 if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "aarch64")
-    add_compile_definitions(webc_compiler PUBLIC SYSY_AARCH64=0)
+    add_compile_definitions(weblang_compiler PUBLIC SYSY_AARCH64=0)
     llvm_map_components_to_libnames(llvm_libs support core irreader
             aarch64info aarch64asmparser aarch64desc aarch64codegen aarch64disassembler #arm64
             )
 elseif (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "arm")
-    add_compile_definitions(webc_compiler PUBLIC SYSY_ARM=0)
+    add_compile_definitions(weblang_compiler PUBLIC SYSY_ARM=0)
     llvm_map_components_to_libnames(llvm_libs support core irreader
             arminfo armasmparser armdesc armcodegen armdisassembler #arm
             )
 else ()
-    add_compile_definitions(webc_compiler PUBLIC SYSY_X86=0)
+    add_compile_definitions(weblang_compiler PUBLIC SYSY_X86=0)
     llvm_map_components_to_libnames(llvm_libs support core irreader
             x86info x86asmparser x86desc x86codegen x86disassembler #X86
             )
@@ -144,7 +144,7 @@ message(STATUS "Found ${llvm_libs}")
 
 # Link against LLVM libraries
 if (WIN32)
-    target_link_libraries(webc_compiler
+    target_link_libraries(weblang_compiler
             LLVM
             ${GTKMM_LIBRARIES}
             ${SSLLib_LIBRARIES}
@@ -155,7 +155,7 @@ if (WIN32)
             wsock32
             )
 else ()
-    target_link_libraries(webc_compiler
+    target_link_libraries(weblang_compiler
             LLVM
             ${GTKMM_LIBRARIES}
             ${SSLLib_LIBRARIES}
@@ -166,6 +166,6 @@ else ()
             )
 endif ()
 
-install(TARGETS webc_compiler)
+install(TARGETS weblang_compiler)
 message(STATUS "配置目标库")
 add_subdirectory(module)

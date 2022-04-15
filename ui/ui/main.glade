@@ -231,7 +231,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="margin_left">4</property>
-                <property name="label" translatable="yes">欢迎来到WebC Compiler</property>
+                <property name="label" translatable="yes">欢迎来到Weblang Compiler</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -474,9 +474,8 @@
   <object class="GtkAboutDialog" id="main_about">
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
-    <property name="program_name">WebC Compiler</property>
+    <property name="program_name">Weblang Compiler</property>
     <property name="version">V2.0</property>
-    <property name="comments" translatable="yes">Hello Web!</property>
     <property name="comments" translatable="yes">作者：原毅哲 王梓铭 邵凌寒</property>
     <property name="logo_icon_name">computer</property>
     <property name="translator_credits" translatable="yes">指导教师：吕艳霞</property>
