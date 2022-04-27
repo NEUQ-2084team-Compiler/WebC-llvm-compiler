@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 set -e
-# This script is only available for the debian series
+# requirements
+# libboost1.71
 
 # update
 sudo apt update
@@ -9,7 +10,6 @@ sudo apt upgrade
 
 # install environments
 sudo apt install -y gcc g++ gdb cmake
-sudo apt remove -y llvm* libclang* clang*
 sudo apt install -y llvm-11-dev libclang-11-dev clang-11
 sudo apt install -y build-essential
 sudo apt install -y libedit-dev
