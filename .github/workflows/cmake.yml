@@ -71,7 +71,7 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}
       run: |
-        build/webc_compiler -i test/case/webc_test/qsort.webc -o a.out
+        build/weblang_compiler -i test/case/wbl_test/qsort.wbl -o a.out
         ./a.out
 
 #    - name: Create Release
