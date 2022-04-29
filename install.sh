@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
-# requirements
-# libboost1.71
+# requirement libboost1.71
 
 # update
 sudo apt update
@@ -25,4 +24,4 @@ cmake -B $(pwd)/build -DCMAKE_BUILD_TYPE=Release -G Ninja
 cmake --build $(pwd)/build
 sudo cmake --build $(pwd)/build --target install
 
-echo "Now you can give it a try"
+echo "Now you can give it a try!"

@@ -1,13 +1,13 @@
-# WebC-llvm-compiler
+# weblang-compiler
 
-![build status](https://github.com/NEUQ-2084team-Compiler/WebC-llvm-compiler/actions/workflows/cmake.yml/badge.svg)
+![build status](https://github.com/NEUQ-2084team-Compiler/weblang-compiler/actions/workflows/cmake.yml/badge.svg)
 
-**WebC**编译器偏向于生成网络方面的执行代码，让小白开发者也可以做一个简单、易用、高性能、安全的http服务器。后期根据开发进度开发其他功能。
+**weblang**编译器偏向于生成网络方面的执行代码，让小白开发者也可以做一个简单、易用、高性能、安全的http服务器。后期根据开发进度开发其他功能。
 
 众所周知：C的http晦涩难学，安装第三方库过于繁琐,但性能最好;Python的http简单，但是是解释型语言，源码直接暴露;Java的http也有学习成本，
 且针对简单的http服务使用Java这种复杂通用性语言有剩余空间，杀鸡焉用牛刀。
 
-WebC编译器致力于打造一个简单语法的http服务器，上手即用语法简单，不用导任何包，不用管依赖问题， 生成的产物为编译好的可执行文件，文件小，安全，且能利用Python不能使用的多核cpu线程优势。
+weblang编译器致力于打造一个简单语法的http服务器，上手即用语法简单，不用导任何包，不用管依赖问题， 生成的产物为编译好的可执行文件，文件小，安全，且能利用Python不能使用的多核cpu线程优势。
 
 ### 环境配置
 * Debian系列系统运行项目目录下install.sh即可
@@ -15,7 +15,7 @@ WebC编译器致力于打造一个简单语法的http服务器，上手即用语
   (环境安装过程中如遇无法自行解决的问题,请积极提issue😂)
 
 ### 一些简单的例子
-helloserver.webc
+helloserver.wbl
 ~~~
 str hello() {
     ret 'hello from compiler';
@@ -35,7 +35,7 @@ int main() {
     ret 0;
 }
 ~~~
-sqltest.webc
+sqltest.wbl
 ~~~
 int main(){
     sqlite_connect_db('test.db');
@@ -44,7 +44,7 @@ int main(){
     ret 0;
 }
 ~~~
-qsort.webc
+qsort.wbl
 ~~~
 int qsort(int a[],int left,int right){
     if (right <= left){
@@ -81,7 +81,7 @@ int main(){
     echo('now:',b[0],b[1],b[2],b[3],b[4]);
 }
 ~~~
-sleeptest.webc
+sleeptest.wbl
 ~~~
 void sleep_1(){
     sleep(1);
