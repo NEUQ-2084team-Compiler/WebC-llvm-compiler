@@ -1,7 +1,3 @@
-//
-// Created by kingtous on 2021/5/17.
-//
-
 #ifndef WEBC_COMPILER_NETWORKREADER_H
 #define WEBC_COMPILER_NETWORKREADER_H
 

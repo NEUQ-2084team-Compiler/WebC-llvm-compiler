@@ -271,9 +271,9 @@ public:
      * @param maxVec  每个参数最大的值，开区间
      * @return carry=0为成功递增，1为未消费进位
      */
-    int incrementVectorIndex(vector<uint64_t> &indexVec, vector<uint64_t> &maxVec);
+    int incrementVectorIndex(vector <uint64_t> &indexVec, vector <uint64_t> &maxVec);
 
-    vector<uint64_t> getIndexVal();
+    vector <uint64_t> getIndexVal();
 
     Type *buildPointerTy();
 
@@ -391,13 +391,14 @@ public:
 class NullExprAST : public ExpressionAST {
 public:
     llvm::Value *codegen() override;
+
     string toString() override;
 };
 
 /// 函数调用结点
 class CallExprAST : public ExpressionAST {
     std::string callName;
-    std::vector<ExpressionAST*> args;
+    std::vector<ExpressionAST *> args;
 
 public:
     CallExprAST(std::string callName, std::vector<ExpressionAST *> args) : callName(std::move(callName)),

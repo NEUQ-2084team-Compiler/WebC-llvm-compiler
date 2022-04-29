@@ -8,11 +8,9 @@
 using namespace llvm;
 
 #ifdef CGUI
-
 #include "ui/widgets.h"
 
 static void activate(GtkApplication *app, gpointer data);
-
 #endif
 
 int main(int argc, char **argv) {

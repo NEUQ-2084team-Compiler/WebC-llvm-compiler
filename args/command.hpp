@@ -48,405 +48,364 @@ namespace Args {
 //
 
 //! Command in the command line interface.
-class Command final
-	:	public GroupIface
-{
-	friend class CmdLine;
-	friend class HelpPrinter;
-	friend class Help;
+    class Command final
+            : public GroupIface {
+        friend class CmdLine;
 
-public:
-	template< typename T >
-	explicit Command( T && nm,
-		ValueOptions opt = ValueOptions::NoValue,
-		bool isSubCommandRequired = false )
-		:	GroupIface( std::forward< T > ( nm ) )
-		,	m_opt( opt )
-		,	m_isDefined( false )
-		,	m_isSubCommandRequired( isSubCommandRequired )
-		,	m_subCommand( nullptr )
-	{
-		if( details::isArgument( name() ) || details::isFlag( name() ) )
-			throw BaseException( String( SL( "Command's name can't "
-				"start with \"-\" whereas you are trying to set name to \"" ) ) +
-				name() + SL( "\"." ) );
+        friend class HelpPrinter;
 
-		if( name().empty() )
-			throw BaseException(
-				String( SL( "Command can't be with empty name." ) ) );
+        friend class Help;
 
-		switch( m_opt )
-		{
-			case ValueOptions::OneValue :
-			{
-				m_valueSpecifier = SL( "arg" );
-			}
-				break;
+    public:
+        template<typename T>
+        explicit Command(T &&nm,
+                         ValueOptions opt = ValueOptions::NoValue,
+                         bool isSubCommandRequired = false)
+                :    GroupIface(std::forward<T>(nm)), m_opt(opt), m_isDefined(false),
+                     m_isSubCommandRequired(isSubCommandRequired), m_subCommand(nullptr) {
+            if (details::isArgument(name()) || details::isFlag(name()))
+                throw BaseException(String(SL("Command's name can't "
+                                              "start with \"-\" whereas you are trying to set name to \"")) +
+                                    name() + SL("\"."));
 
-			case ValueOptions::ManyValues :
-			{
-				m_valueSpecifier = SL( "args" );
-			}
-				break;
+            if (name().empty())
+                throw BaseException(
+                        String(SL("Command can't be with empty name.")));
 
-			default :
-				break;
-		}
-	}
+            switch (m_opt) {
+                case ValueOptions::OneValue : {
+                    m_valueSpecifier = SL("arg");
+                }
+                    break;
 
-	virtual ~Command()
-	{
-	}
+                case ValueOptions::ManyValues : {
+                    m_valueSpecifier = SL("args");
+                }
+                    break;
 
-	//! \return Type of the argument.
-	ArgType type() const override
-	{
-		return ArgType::Command;
-	}
+                default :
+                    break;
+            }
+        }
 
-	//! \return Is this command defined?
-	bool isDefined() const override
-	{
-		return m_isDefined;
-	}
+        virtual ~Command() {
+        }
 
-	//! \return Is this argument with value?
-	bool isWithValue() const override
-	{
-		return ( m_opt == ValueOptions::OneValue ||
-			m_opt == ValueOptions::ManyValues );
-	}
+        //! \return Type of the argument.
+        ArgType type() const override {
+            return ArgType::Command;
+        }
 
-	//! Set required flag.
-	void setRequired( bool on = true ) override
-	{
-		UNUSED( on )
-	}
+        //! \return Is this command defined?
+        bool isDefined() const override {
+            return m_isDefined;
+        }
 
-	//! \return Value specifier.
-	const String & valueSpecifier() const override
-	{
-		return m_valueSpecifier;
-	}
-	//! Set value specifier.
-	void setValueSpecifier( const String & vs )
-	{
-		m_valueSpecifier = vs;
-	}
+        //! \return Is this argument with value?
+        bool isWithValue() const override {
+            return (m_opt == ValueOptions::OneValue ||
+                    m_opt == ValueOptions::ManyValues);
+        }
 
-	//! \return Description of the argument.
-	const String & description() const override
-	{
-		return m_description;
-	}
-	//! Set description.
-	void setDescription( const String & desc )
-	{
-		m_description = desc;
-	}
+        //! Set required flag.
+        void setRequired(bool on = true) override {
+            UNUSED(on)
+        }
 
-	//! \return Long description of the argument.
-	const String & longDescription() const override
-	{
-		if( !m_longDescription.empty() )
-			return m_longDescription;
-		else
-			return m_description;
-	}
-	//! Set long description.
-	void setLongDescription( const String & desc )
-	{
-		m_longDescription = desc;
-	}
+        //! \return Value specifier.
+        const String &valueSpecifier() const override {
+            return m_valueSpecifier;
+        }
 
-	//! \return First value of this argument.
-	const String & value() const
-	{
-		if( !m_values.empty() )
-			return m_values.front();
-		else if( !m_defaultValues.empty() )
-			return m_defaultValues.front();
-		else
-			return m_dummyEmptyString;
-	}
+        //! Set value specifier.
+        void setValueSpecifier(const String &vs) {
+            m_valueSpecifier = vs;
+        }
 
-	//! \return All values for this argument.
-	const StringList & values() const
-	{
-		if( !m_values.empty() )
-			return m_values;
-		else
-			return m_defaultValues;
-	}
+        //! \return Description of the argument.
+        const String &description() const override {
+            return m_description;
+        }
 
-	//! \return Default value.
-	const String & defaultValue() const
-	{
-		if( !m_defaultValues.empty() )
-			return m_defaultValues.front();
-		else
-			return m_dummyEmptyString;
-	}
+        //! Set description.
+        void setDescription(const String &desc) {
+            m_description = desc;
+        }
 
-	//! Set default value. \note Value will be pushed back to the list
-	//! of default values.
-	void setDefaultValue( const String & v )
-	{
-		m_defaultValues.push_back( v );
-	}
+        //! \return Long description of the argument.
+        const String &longDescription() const override {
+            if (!m_longDescription.empty())
+                return m_longDescription;
+            else
+                return m_description;
+        }
 
-	//! \return Default values.
-	const StringList & defaultValues() const
-	{
-		return m_defaultValues;
-	}
+        //! Set long description.
+        void setLongDescription(const String &desc) {
+            m_longDescription = desc;
+        }
 
-	//! Set default values.
-	void setDefaultValues( const StringList & v )
-	{
-		m_defaultValues = v;
-	}
+        //! \return First value of this argument.
+        const String &value() const {
+            if (!m_values.empty())
+                return m_values.front();
+            else if (!m_defaultValues.empty())
+                return m_defaultValues.front();
+            else
+                return m_dummyEmptyString;
+        }
 
-	//! \return Is given name a misspelled name of the argument.
-	bool isMisspelledName(
-		//! Name to check (misspelled).
-		const String & nm,
-		//! List of possible names for the given misspelled name.
-		StringList & possibleNames ) const override
-	{
-		bool ret = false;
+        //! \return All values for this argument.
+        const StringList &values() const {
+            if (!m_values.empty())
+                return m_values;
+            else
+                return m_defaultValues;
+        }
 
-		if( details::isMisspelledName( nm, name() ) )
-		{
-			possibleNames.push_back( name() );
+        //! \return Default value.
+        const String &defaultValue() const {
+            if (!m_defaultValues.empty())
+                return m_defaultValues.front();
+            else
+                return m_dummyEmptyString;
+        }
 
-			ret = true;
-		}
+        //! Set default value. \note Value will be pushed back to the list
+        //! of default values.
+        void setDefaultValue(const String &v) {
+            m_defaultValues.push_back(v);
+        }
 
-		if( GroupIface::isMisspelledName( nm, possibleNames ) )
-			return true;
-		else
-			return ret;
-	}
+        //! \return Default values.
+        const StringList &defaultValues() const {
+            return m_defaultValues;
+        }
 
-	//! \return Is given name a misspelled name of the command.
-	bool isMisspelledCommand(
-		//! Name to check (misspelled).
-		const String & nm,
-		//! List of possible names for the given misspelled name.
-		StringList & possibleNames ) const
-	{
-		if( details::isMisspelledName( nm, name() ) )
-		{
-			possibleNames.push_back( name() );
+        //! Set default values.
+        void setDefaultValues(const StringList &v) {
+            m_defaultValues = v;
+        }
 
-			return true;
-		}
-		else
-			return false;
-	}
+        //! \return Is given name a misspelled name of the argument.
+        bool isMisspelledName(
+                //! Name to check (misspelled).
+                const String &nm,
+                //! List of possible names for the given misspelled name.
+                StringList &possibleNames) const override {
+            bool ret = false;
 
-	//! Clear state of the argument.
-	void clear() override
-	{
-		m_isDefined = false;
+            if (details::isMisspelledName(nm, name())) {
+                possibleNames.push_back(name());
 
-		m_values.clear();
+                ret = true;
+            }
 
-		GroupIface::clear();
-	}
+            if (GroupIface::isMisspelledName(nm, possibleNames))
+                return true;
+            else
+                return ret;
+        }
 
-	//! Add sub-command.
-	template< typename T >
-	typename std::enable_if< std::is_base_of< Command, T >::value >::type
-	addCommand( T & arg )
-	{
-		addCommand( ArgPtr( &arg, details::Deleter< ArgIface > ( false ) ) );
-	}
+        //! \return Is given name a misspelled name of the command.
+        bool isMisspelledCommand(
+                //! Name to check (misspelled).
+                const String &nm,
+                //! List of possible names for the given misspelled name.
+                StringList &possibleNames) const {
+            if (details::isMisspelledName(nm, name())) {
+                possibleNames.push_back(name());
 
-	//! Add sub-command.
-	template< typename T >
-	typename std::enable_if< std::is_base_of< Command, T >::value >::type
-	addCommand( T * arg )
-	{
-		addCommand( ArgPtr( arg, details::Deleter< ArgIface > ( false ) ) );
-	}
+                return true;
+            } else
+                return false;
+        }
 
-	//! Add sub-command.
-	void addCommand( ArgPtr arg )
-	{
-		if( m_opt != ValueOptions::NoValue )
-			throw BaseException( String( SL( "Addition of commands to command with "
-				"value is disallowed." ) ) );
+        //! Clear state of the argument.
+        void clear() override {
+            m_isDefined = false;
 
-		if( std::find( m_children.cbegin(), m_children.cend(), arg ) ==
-			m_children.cend() )
-		{
-			if( cmdLine() )
-				arg->setCmdLine( cmdLine() );
+            m_values.clear();
 
-			m_children.push_back( std::move( arg ) );
-		}
-	}
+            GroupIface::clear();
+        }
 
-protected:
-	/*!
-		\return Argument for the given name.
+        //! Add sub-command.
+        template<typename T>
+        typename std::enable_if<std::is_base_of<Command, T>::value>::type
+        addCommand(T &arg) {
+            addCommand(ArgPtr(&arg, details::Deleter<ArgIface>(false)));
+        }
 
-		\retval this if the given name is the name of the command.
+        //! Add sub-command.
+        template<typename T>
+        typename std::enable_if<std::is_base_of<Command, T>::value>::type
+        addCommand(T *arg) {
+            addCommand(ArgPtr(arg, details::Deleter<ArgIface>(false)));
+        }
 
-		\note Doesn't look in the children.
-	*/
-	ArgIface * findArgument(
-		/*!
-			Name of the argument. Can be for example "-t" or
-			"--timeout".
-		*/
-		const String & n ) override
-	{
-		if( name() == n )
-			return this;
-		else
-			return nullptr;
-	}
+        //! Add sub-command.
+        void addCommand(ArgPtr arg) {
+            if (m_opt != ValueOptions::NoValue)
+                throw BaseException(String(SL("Addition of commands to command with "
+                                              "value is disallowed.")));
 
-	/*!
-		\return Argument for the given name.
+            if (std::find(m_children.cbegin(), m_children.cend(), arg) ==
+                m_children.cend()) {
+                if (cmdLine())
+                    arg->setCmdLine(cmdLine());
 
-		\retval Pointer to the ArgIface if this argument handles
-			argument with the given name.
-		\retval nullptr if this argument doesn't know about
-			argument with name.
+                m_children.push_back(std::move(arg));
+            }
+        }
 
-		\note Looks only in children.
-	*/
-	ArgIface * findChild(
-		/*!
-			Name of the argument. Can be for example "-t" or
-			"--timeout".
-		*/
-		const String & name )
-	{
-		auto * arg = GroupIface::findArgument( name );
+    protected:
+        /*!
+            \return Argument for the given name.
 
-		if( !arg && m_subCommand )
-			return m_subCommand->findChild( name );
+            \retval this if the given name is the name of the command.
 
-		return arg;
-	}
+            \note Doesn't look in the children.
+        */
+        ArgIface *findArgument(
+                /*!
+                    Name of the argument. Can be for example "-t" or
+                    "--timeout".
+                */
+                const String &n) override {
+            if (name() == n)
+                return this;
+            else
+                return nullptr;
+        }
 
-	/*!
-		Process argument's staff, for example take values from
-		context. This method invokes exactly at that moment when
-		parser has found this argument.
-	*/
-	void process(
-		//! Context of the command line.
-		Context & ctx ) override
-	{
-		m_isDefined = true;
+        /*!
+            \return Argument for the given name.
 
-		switch( m_opt )
-		{
-			case ValueOptions::ManyValues :
-			{
-				eatValues( ctx, m_values,
-					String( SL( "Command \"" ) ) +
-						name() + SL( "\" requires value that wasn't presented." ),
-					cmdLine() );
-			}
-				break;
+            \retval Pointer to the ArgIface if this argument handles
+                argument with the given name.
+            \retval nullptr if this argument doesn't know about
+                argument with name.
 
-			case ValueOptions::OneValue :
-			{
-				m_values.push_back( eatOneValue( ctx,
-					String( SL( "Command \"" ) ) + name() +
-						SL( "\" requires value that wasn't presented." ),
-					cmdLine() ) );
-			}
-				break;
+            \note Looks only in children.
+        */
+        ArgIface *findChild(
+                /*!
+                    Name of the argument. Can be for example "-t" or
+                    "--timeout".
+                */
+                const String &name) {
+            auto *arg = GroupIface::findArgument(name);
 
-			default :
-				break;
-		}
-	}
+            if (!arg && m_subCommand)
+                return m_subCommand->findChild(name);
 
-	/*!
-		Check correctness of the argument before parsing.
+            return arg;
+        }
 
-		Implementation of this method must add his flag
-		and name to the flags and names.
-	*/
-	void checkCorrectnessBeforeParsing(
-		//! All known flags.
-		StringList & flags,
-		//! All known names.
-		StringList & names ) const override
-	{
-		if( details::isCorrectName( name() ) )
-		{
-			auto it = std::find( names.begin(), names.end(), name() );
+        /*!
+            Process argument's staff, for example take values from
+            context. This method invokes exactly at that moment when
+            parser has found this argument.
+        */
+        void process(
+                //! Context of the command line.
+                Context &ctx) override {
+            m_isDefined = true;
 
-			if( it != names.end() )
-				throw BaseException( String( SL( "Redefinition of command "
-					"with name \"" ) ) + name() + SL( "\"." ) );
-			else
-				names.push_back( name() );
-		}
-		else
-			throw BaseException( String( SL( "Disallowed name \"" ) ) +
-				name() + SL( "\" for the command." ) );
+            switch (m_opt) {
+                case ValueOptions::ManyValues : {
+                    eatValues(ctx, m_values,
+                              String(SL("Command \"")) +
+                              name() + SL("\" requires value that wasn't presented."),
+                              cmdLine());
+                }
+                    break;
 
-		StringList ftmp = flags;
-		StringList ntmp = names;
+                case ValueOptions::OneValue : {
+                    m_values.push_back(eatOneValue(ctx,
+                                                   String(SL("Command \"")) + name() +
+                                                   SL("\" requires value that wasn't presented."),
+                                                   cmdLine()));
+                }
+                    break;
 
-		GroupIface::checkCorrectnessBeforeParsing( ftmp, ntmp );
-	}
+                default :
+                    break;
+            }
+        }
 
-	//! Check correctness of the argument after parsing.
-	void checkCorrectnessAfterParsing() const override
-	{
-		if( isDefined() )
-			GroupIface::checkCorrectnessAfterParsing();
+        /*!
+            Check correctness of the argument before parsing.
 
-		if( isDefined() && m_isSubCommandRequired && !m_subCommand )
-			throw BaseException( String( SL( "Wasn't defined required sub-command of command \"" ) ) +
-				name() + SL( "\"." ) );
-	}
+            Implementation of this method must add his flag
+            and name to the flags and names.
+        */
+        void checkCorrectnessBeforeParsing(
+                //! All known flags.
+                StringList &flags,
+                //! All known names.
+                StringList &names) const override {
+            if (details::isCorrectName ( name())) {
+                auto it = std::find(names.begin(), names.end(), name());
 
-	//! Set current subcommand.
-	void setCurrentSubCommand( Command * sub )
-	{
-		if( !m_subCommand )
-			m_subCommand = sub;
-		else
-			throw BaseException( String( SL( "Only one sub-command of command \"" ) ) +
-				name() + SL( "\" can be defined. \"" ) + m_subCommand->name() +
-				SL( "\" already defined." ) );
-	}
+                if (it != names.end())
+                    throw BaseException(String(SL("Redefinition of command "
+                                                  "with name \"")) + name() + SL("\"."));
+                else
+                    names.push_back(name());
+            } else
+                throw BaseException(String(SL("Disallowed name \"")) +
+                                    name() + SL("\" for the command."));
 
-private:
-	DISABLE_COPY( Command )
+            StringList ftmp = flags;
+            StringList ntmp = names;
 
-	//! Option.
-	ValueOptions m_opt;
-	//! Value specifier.
-	String m_valueSpecifier;
-	//! Description.
-	String m_description;
-	//! Long description.
-	String m_longDescription;
-	//! Is defined.
-	bool m_isDefined;
-	//! Is sub-command required?
-	bool m_isSubCommandRequired;
-	//! Values.
-	StringList m_values;
-	//! Default values.
-	StringList m_defaultValues;
-	//! Current sub-command.
-	Command * m_subCommand;
-}; // class Command
+            GroupIface::checkCorrectnessBeforeParsing(ftmp, ntmp);
+        }
+
+        //! Check correctness of the argument after parsing.
+        void checkCorrectnessAfterParsing() const override {
+            if (isDefined())
+                GroupIface::checkCorrectnessAfterParsing();
+
+            if (isDefined() && m_isSubCommandRequired && !m_subCommand)
+                throw BaseException(String(SL("Wasn't defined required sub-command of command \"")) +
+                                    name() + SL("\"."));
+        }
+
+        //! Set current subcommand.
+        void setCurrentSubCommand(Command *sub) {
+            if (!m_subCommand)
+                m_subCommand = sub;
+            else
+                throw BaseException(String(SL("Only one sub-command of command \"")) +
+                                    name() + SL("\" can be defined. \"") + m_subCommand->name() +
+                                    SL("\" already defined."));
+        }
+
+    private:
+        DISABLE_COPY(Command)
+
+        //! Option.
+        ValueOptions m_opt;
+        //! Value specifier.
+        String m_valueSpecifier;
+        //! Description.
+        String m_description;
+        //! Long description.
+        String m_longDescription;
+        //! Is defined.
+        bool m_isDefined;
+        //! Is sub-command required?
+        bool m_isSubCommandRequired;
+        //! Values.
+        StringList m_values;
+        //! Default values.
+        StringList m_defaultValues;
+        //! Current sub-command.
+        Command *m_subCommand;
+    }; // class Command
 
 } /* namespace Args */
 

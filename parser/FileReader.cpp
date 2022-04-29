@@ -1,6 +1,3 @@
-//
-// Created by 金韬 on 2020/9/23.
-//
 #include "compiler/ErrHelper.h"
 #include "FileReader.h"
 #include <fstream>

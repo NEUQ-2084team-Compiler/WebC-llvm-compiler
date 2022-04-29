@@ -1,7 +1,3 @@
-//
-// Created by 金韬 on 2021/2/26.
-//
-
 #include "RecursiveToLoopPass.h"
 
 char RecursiveToLoopPass::ID = 0;

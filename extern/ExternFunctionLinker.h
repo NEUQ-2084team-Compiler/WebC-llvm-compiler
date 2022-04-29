@@ -12,14 +12,14 @@
 #include "ExternFunctionHandler.h"
 
 class ExternFunctionLinker {
-    static std::vector<ExternFunctionHandler*> handlers;
+    static std::vector<ExternFunctionHandler *> handlers;
 public:
 
     /**
      * 注册外部函数Handler
      * @param handler
      */
-    static void registerHandler(ExternFunctionHandler* handler);
+    static void registerHandler(ExternFunctionHandler *handler);
 
     /**
      * 尝试处理外部函数调用
@@ -29,8 +29,8 @@ public:
      * @param vector
      * @return 成功返回non-nullptr
      */
-    static Value* tryHandleFuncCall(LLVMContext &context, Module &module, const std::string &func_name,
-                                  std::vector<Value *>* vector);
+    static Value *tryHandleFuncCall(LLVMContext &context, Module &module, const std::string &func_name,
+                                    std::vector<Value *> *vector);
 };
 
 #endif //SYSYPLUS_COMPILER_EXTERNFUNCTIONLINKER_H

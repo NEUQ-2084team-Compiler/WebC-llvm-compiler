@@ -1,7 +1,3 @@
-//
-// Created by 金韬 on 2020/9/23.
-//
-
 #ifndef LLVM_KALEIDOSCOPE_FILEREADER_H
 #define LLVM_KALEIDOSCOPE_FILEREADER_H
 

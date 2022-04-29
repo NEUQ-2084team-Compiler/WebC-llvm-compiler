@@ -1,8 +1,3 @@
-//
-// Created by 金韬 on 2020/9/21.
-// Description: from word to lex
-//
-
 #ifndef LLVM_KALEIDOSCOPE_LEXER_H
 #define LLVM_KALEIDOSCOPE_LEXER_H
 

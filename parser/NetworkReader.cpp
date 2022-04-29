@@ -1,7 +1,3 @@
-//
-// Created by kingtous on 2021/5/17.
-//
-
 #include "NetworkReader.h"
 #include "compiler/Global.h"
 #include "compiler/ErrHelper.h"
