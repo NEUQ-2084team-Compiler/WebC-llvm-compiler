@@ -13,3 +13,4 @@ module/CMakeFiles/**
 module/time/CMakeFiles/**
 .idea/
 *.db
+.cache

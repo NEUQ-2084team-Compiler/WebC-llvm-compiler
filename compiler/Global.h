@@ -30,6 +30,8 @@
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Target/TargetOptions.h"
 #include <boost/regex.hpp>
+#include "llvm/IR/Instructions.h"
+
 
 /// 状态字
 #define ROK 0
