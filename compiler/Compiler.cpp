@@ -153,7 +153,8 @@ int genCode(const set<ArgsParser::Options> &opts, const char *outputPath) {
   pass.add(createCFGSimplificationPass());
   pass.add(createLoopDeletionPass());
   pass.add(new BasicBlockCounter());
-  pass.add(new TailRecursion());
+  // pass.add(new TailRecursion());
+  // pass.add(new DeadCodeEliminatePass());
 #endif
   if (opts.find(ArgsParser::Options::PASS_TIME_ANALYSIS) != opts.end()) {
     pass.add(new TimeAnalysisPass());
@@ -164,6 +165,10 @@ int genCode(const set<ArgsParser::Options> &opts, const char *outputPath) {
     return 1;
   }
   pass.run(*TheModule);
+
+  // 输出IR
+  TheModule->print(outs(), NIL);
+
 #ifdef DEBUG_FLAG
 #ifdef CGUI
   std::string ir_buf;

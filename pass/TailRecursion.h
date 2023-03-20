@@ -1,4 +1,4 @@
-// #include "compiler/Global.h"
+#include "compiler/Global.h"
 // #include <llvm-11/llvm/IR/Function.h>
 // #include <llvm-11/llvm/Pass.h>
 #include "llvm/IR/BasicBlock.h"

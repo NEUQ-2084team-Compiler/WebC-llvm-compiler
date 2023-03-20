@@ -16,6 +16,7 @@
 #include "pass/RecursiveToLoopPass.h"
 #include "pass/BasicBlockCounter.h"
 #include "pass/TailRecursion.h"
+#include "pass/DeadCodeEliminatePass.h"
 #include "parser/FileReader.h"
 #include "parser/StringReader.h"
 #include "Global.h"

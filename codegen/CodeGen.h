@@ -28,7 +28,7 @@ typedef struct ForCodeGenBlockContext {
     BasicBlock *bbCond;
     BasicBlock *bbStep;
     BasicBlock *bbBody;
-    BasicBlock *bbEndFor;
+    BasicBlock *bbEndFor;//for循环结束
 
     ForCodeGenBlockContext(BasicBlock *bbStart, BasicBlock *bbCond, BasicBlock *bbStep, BasicBlock *bbBody,
                            BasicBlock *bbEndFor);
@@ -37,9 +37,9 @@ typedef struct ForCodeGenBlockContext {
 
 typedef struct IfCodeGenBlockContext {
     BasicBlock *bbCond;
-    BasicBlock *bbEndIf;
     BasicBlock *bbTrue;
     BasicBlock *bbElse;
+    BasicBlock *bbEndIf;
 
     IfCodeGenBlockContext(BasicBlock *bbCond, BasicBlock *bbEndIf, BasicBlock *bbTrue, BasicBlock *bbElse);
 } IfCodeGenBlockContext;
@@ -60,6 +60,10 @@ union CodeGenBlockContext {
 };
 typedef union CodeGenBlockContext CodeGenBlockContext;
 
+
+/*
+    保存当前代码生成快的上下文信息
+*/
 class CodeGenBlock {
 public:
     BasicBlock *block; // BasicBlock

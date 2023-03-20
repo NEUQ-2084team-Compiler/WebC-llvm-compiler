@@ -270,4 +270,3 @@ BlockAST* run_parser(std::string path) {
     fclose(yyin);
     return program;
 }
-

@@ -1,0 +1,10 @@
+int fib(int a, int b, int n) {
+    if (n == 0){
+        ret a;
+    }
+    ret fib(a + b, a, n - 1);
+}
+
+int main(){
+    echo(fib(1,2,3));
+}
