@@ -11,5 +11,5 @@ vscode:
   extensions:
     - "ms-vscode.cpptools-extension-pack"
     - "llvm-vs-code-extensions.vscode-clangd"
-
-
+    - "seatonjiang.gitmoji-vscode"
+    - "github.copilot"

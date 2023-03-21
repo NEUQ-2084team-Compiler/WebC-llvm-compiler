@@ -4,8 +4,8 @@ set -e
 # requirement libboost1.71
 
 # update
-sudo apt update
-sudo apt upgrade
+sudo apt -y update
+sudo apt -y upgrade
 
 # install environments
 sudo apt install -y gcc g++ gdb cmake
