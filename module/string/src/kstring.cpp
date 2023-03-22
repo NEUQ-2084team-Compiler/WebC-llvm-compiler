@@ -10,6 +10,7 @@ const char *toString(void *a, sysytype_t type) {
             int *tmp = static_cast<int *>(a);
             int tmp_num = *tmp;
             auto str = std::to_string(tmp_num);
+            // create a new char array with a size of str.size() + 1 and add a null terminator
             char *str_mem = new char[str.size() + 1];
             memcpy(str_mem, str.c_str(), str.size() + 1);
             return str_mem;

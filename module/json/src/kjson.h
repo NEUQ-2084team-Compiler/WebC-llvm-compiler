@@ -5,16 +5,16 @@
 #ifndef SYSYPLUS_COMPILER_KJSON_H
 #define SYSYPLUS_COMPILER_KJSON_H
 
-#include <iostream>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include <iostream>
 
 // TODO 之后改为const char*
 struct JsonData {
-    std::shared_ptr<boost::property_tree::ptree> pt;
+  std::shared_ptr<boost::property_tree::ptree> pt;
 };
 typedef JsonData *SYSY_JSON_DATA;
-typedef const char * SYSY_STR;
+typedef const char *SYSY_STR;
 
 extern "C" {
 
@@ -25,15 +25,11 @@ extern "C" {
  */
 SYSY_JSON_DATA strToJson(SYSY_STR str);
 
-
 /**
  * @brief json转string
  * @param json json数据
  * @return string
  */
 SYSY_STR jsonToStr(SYSY_JSON_DATA json);
-
-
-
 }
-#endif //SYSYPLUS_COMPILER_KJSON_H
+#endif // SYSYPLUS_COMPILER_KJSON_H
