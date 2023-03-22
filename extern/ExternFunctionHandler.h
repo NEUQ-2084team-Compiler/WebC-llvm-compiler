@@ -20,127 +20,140 @@ using namespace llvm;
 class ExternFunctionHandler {
 private:
 public:
-    ExternFunctionHandler();
+  ExternFunctionHandler();
 
-    virtual Value *tryhandle(LLVMContext &context,
-                             Module &module, std::string callName, std::vector<Value *> *argV) = 0;
+  virtual Value *tryhandle(LLVMContext &context, Module &module,
+                           std::string callName,
+                           std::vector<Value *> *argV) = 0;
 
-    static bool externFunctionHandlerCompRule(ExternFunctionHandler *handler1, ExternFunctionHandler *handler2);
+  static bool externFunctionHandlerCompRule(ExternFunctionHandler *handler1,
+                                            ExternFunctionHandler *handler2);
 
-    virtual int getPriority();
+  virtual int getPriority();
 
-    /**
-     * 获取func
-     * @param context
-     * @param module
-     * @param func_name
-     * @param vector
-     * @return
-     */
-    static Function *getExternFunc(LLVMContext &context, Module &module, const std::string &func_name,
-                                   std::vector<Value *> *vector);
+  /**
+   * 获取func
+   * @param context
+   * @param module
+   * @param func_name
+   * @param vector
+   * @return
+   */
+  static Function *getExternFunc(LLVMContext &context, Module &module,
+                                 const std::string &func_name,
+                                 std::vector<Value *> *vector);
 
-    static Function *getOrAddPrintfFunc(LLVMContext &context, Module &module);
+  static Function *getOrAddPrintfFunc(LLVMContext &context, Module &module);
 
-    static Function *getOrAddTimeFunc(LLVMContext &context, Module &module);
+  static Function *getOrAddTimeFunc(LLVMContext &context, Module &module);
 
-    static Function *getOrAddSleepFunc(LLVMContext &context, Module &module);
+  static Function *getOrAddSleepFunc(LLVMContext &context, Module &module);
 
-    static Function *getOrAddGetSocketFunc(LLVMContext &context, Module &module);
+  static Function *getOrAddGetSocketFunc(LLVMContext &context, Module &module);
 
-    static Function *getOrAddConnectSocketFunc(LLVMContext &context, Module &module);
+  static Function *getOrAddConnectSocketFunc(LLVMContext &context,
+                                             Module &module);
 
-    static Function *getOrAddCloseSocketFunc(LLVMContext &context, Module &module);
+  static Function *getOrAddCloseSocketFunc(LLVMContext &context,
+                                           Module &module);
 
-    static Function *getOrAddIsSocketConnectedFunc(LLVMContext &context, Module &module);
+  static Function *getOrAddIsSocketConnectedFunc(LLVMContext &context,
+                                                 Module &module);
 
-    static Function *getOrAddGetRequestFunc(LLVMContext &context, Module &module);
+  static Function *getOrAddGetRequestFunc(LLVMContext &context, Module &module);
 
-    static Function *getOrAddPostRequestFunc(LLVMContext &context, Module &module);
+  static Function *getOrAddPostRequestFunc(LLVMContext &context,
+                                           Module &module);
 
-    static Function *getOrAddGetServerFunc(LLVMContext &context, Module &module);
+  static Function *getOrAddGetServerFunc(LLVMContext &context, Module &module);
 
-    static Function *getOrAddUrlHandler(LLVMContext &context, Module &module);
+  static Function *getOrAddUrlHandler(LLVMContext &context, Module &module);
 
-    static Function *getOrAddStartServer(LLVMContext &context, Module &module);
+  static Function *getOrAddStartServer(LLVMContext &context, Module &module);
 
-    static Function *getOrAddtoString(LLVMContext &context, Module &module);
+  static Function *getOrAddtoString(LLVMContext &context, Module &module);
 
-    // mysql
-    static Function *getOrAddMysqlConnectDB(LLVMContext &context, Module &module);
+  // mysql
+  static Function *getOrAddMysqlConnectDB(LLVMContext &context, Module &module);
 
-    static Function *getOrAddMysqlFreeMemory(LLVMContext &context, Module &module);
+  static Function *getOrAddMysqlFreeMemory(LLVMContext &context,
+                                           Module &module);
 
-    static Function *getOrAddMysqlQueryDB(LLVMContext &context, Module &module);
+  static Function *getOrAddMysqlQueryDB(LLVMContext &context, Module &module);
 
-    static Function *getOrAddIsMysqlConnected(LLVMContext &context, Module &module);
+  static Function *getOrAddIsMysqlConnected(LLVMContext &context,
+                                            Module &module);
 
-    static Function *getOrAddMysqlExecDB(LLVMContext &context, Module &module);
+  static Function *getOrAddMysqlExecDB(LLVMContext &context, Module &module);
 
-    // sqlite
-    static Function *getOrAddSQLiteConnectDB(LLVMContext &context,Module &module);
+  // sqlite
+  static Function *getOrAddSQLiteConnectDB(LLVMContext &context,
+                                           Module &module);
 
-    static Function *getOrAddSQLiteExecDB(LLVMContext &context,Module &module);
+  static Function *getOrAddSQLiteExecDB(LLVMContext &context, Module &module);
 
-    static Function *getOrAddSQLiteQueryDB(LLVMContext &context,Module &module);
+  static Function *getOrAddSQLiteQueryDB(LLVMContext &context, Module &module);
 };
-
 
 class EchoFunctionHandler : public ExternFunctionHandler {
 
 public:
-    EchoFunctionHandler();
+  EchoFunctionHandler();
 
-    Value *tryhandle(LLVMContext &context, Module &module, std::string callName, std::vector<Value *> *argV) override;
+  Value *tryhandle(LLVMContext &context, Module &module, std::string callName,
+                   std::vector<Value *> *argV) override;
 
-    int getPriority() override;
+  int getPriority() override;
 };
 
 class TimeFunctionHandler : public ExternFunctionHandler {
 public:
-    int getPriority() override;
+  int getPriority() override;
 
-    TimeFunctionHandler();
+  TimeFunctionHandler();
 
-    Value *tryhandle(LLVMContext &context, Module &module, std::string callName, std::vector<Value *> *argV) override;
+  Value *tryhandle(LLVMContext &context, Module &module, std::string callName,
+                   std::vector<Value *> *argV) override;
 };
 
 class SleepFunctionHandler : public ExternFunctionHandler {
 public:
-    int getPriority() override;
+  int getPriority() override;
 
-    SleepFunctionHandler();
+  SleepFunctionHandler();
 
-    Value *tryhandle(LLVMContext &context, Module &module, std::string callName, std::vector<Value *> *argV) override;
+  Value *tryhandle(LLVMContext &context, Module &module, std::string callName,
+                   std::vector<Value *> *argV) override;
 };
 
 class WebFunctionHandler : public ExternFunctionHandler {
 public:
+  WebFunctionHandler();
 
-    WebFunctionHandler();
+  Value *tryhandle(LLVMContext &context, Module &module, std::string callName,
+                   std::vector<Value *> *argV) override;
 
-    Value *tryhandle(LLVMContext &context, Module &module, std::string callName, std::vector<Value *> *argV) override;
-
-    int getPriority() override;
+  int getPriority() override;
 };
 
 class KStringFunctionHandler : public ExternFunctionHandler {
 public:
+  KStringFunctionHandler();
 
-    KStringFunctionHandler();
+  Value *tryhandle(LLVMContext &context, Module &module, std::string callName,
+                   std::vector<Value *> *argV) override;
 
-    Value *tryhandle(LLVMContext &context, Module &module, std::string callName, std::vector<Value *> *argV) override;
-
-    int getPriority() override;
+  int getPriority() override;
 };
 
 class KsqlFunctionHandler : public ExternFunctionHandler {
 public:
-    KsqlFunctionHandler();
+  KsqlFunctionHandler();
 
-    Value *tryhandle(LLVMContext &context, Module &module, std::string callName, std::vector<Value *> *argV) override;
+  Value *tryhandle(LLVMContext &context, Module &module, std::string callName,
+                   std::vector<Value *> *argV) override;
 
-    int getPriority() override;
+  int getPriority() override;
 };
 
-#endif //SYSYPLUS_COMPILER_EXTERNFUNCTIONHANDLER_H
+#endif // SYSYPLUS_COMPILER_EXTERNFUNCTIONHANDLER_H
