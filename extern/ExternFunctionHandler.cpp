@@ -109,12 +109,15 @@ Function *ExternFunctionHandler::getExternFunc(LLVMContext &context,
 Function *ExternFunctionHandler::getOrAddPrintfFunc(LLVMContext &context,
                                                     Module &module) {
   auto funcs = module.functions();
+  // 如果当前module中找不到的话,就再创建一个并添加到module中
   auto it = funcs.begin();
   for (; it != funcs.end(); it++) {
     if ((*it).getName() == "printf") {
       return &(*it);
     }
   }
+
+  // 接受一个 char* 类型的参数并返回一个 int 类型的值，表示输出的字符数量
   FunctionType *ty = FunctionType::get(Type::getInt32Ty(context),
                                        {Type::getInt8PtrTy(context)}, true);
   auto func = Function::Create(ty, llvm::GlobalValue::ExternalLinkage, "printf",
@@ -150,6 +153,7 @@ Function *ExternFunctionHandler::getOrAddSleepFunc(LLVMContext &context,
   }
   //    std::vector<Type*> args;
   //    args.push_back(Type::getInt64PtrTy(context));
+  // 返回值是实际的休眠时间数
   FunctionType *ty = FunctionType::get(Type::getInt32Ty(context),
                                        Type::getInt32Ty(context), false);
   auto func =
@@ -267,6 +271,7 @@ Function *ExternFunctionHandler::getOrAddUrlHandler(LLVMContext &context,
   if (func != NIL) {
     return func;
   }
+  // 返回值为const char*的函数指针,作为handle
   auto func_param_type = FunctionType::get(Type::getInt8PtrTy(context), false);
 
   FunctionType *ty = FunctionType::get(
@@ -301,6 +306,8 @@ Function *ExternFunctionHandler::getOrAddtoString(LLVMContext &context,
     return func;
   }
   // const char* func(void* a,int type) void* 也为i8*
+  // 通常情况下，i8* 和 void* 在 LLVM
+  // 中是等价的，因此可以根据需要使用其中任何一个来表示指向 void 类型的指针
   FunctionType *ty = FunctionType::get(
       Type::getInt8PtrTy(context),
       {Type::getInt8PtrTy(context), Type::getInt32Ty(context)}, false);
@@ -495,6 +502,7 @@ Value *KStringFunctionHandler::tryhandle(LLVMContext &context, Module &module,
     } else {
       return NIL;
     }
+    // allocate space on the stack for the variable
     auto arg_mem = Builder->CreateAlloca(arg->getType());
     Builder->CreateStore(arg, arg_mem);
     arg = Builder->CreateBitCast(arg_mem, Type::getInt8PtrTy(context));
